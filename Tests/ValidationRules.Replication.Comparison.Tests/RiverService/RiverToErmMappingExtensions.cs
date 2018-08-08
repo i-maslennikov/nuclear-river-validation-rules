@@ -69,8 +69,8 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
                             { MessageTypeCode.OptionalAdvertisementMustPassReview, 0 },
                             { MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement, 0 },
                             { MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement, 0 },
-                            { MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser, 0 },
                             { MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser, 0 },
+                            { MessageTypeCode.PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser, 0 },
                             { MessageTypeCode.AmsMessagesShouldBeNew, 0 },
                     }.ToDictionary(x => x.Key, x => x.Value);
 

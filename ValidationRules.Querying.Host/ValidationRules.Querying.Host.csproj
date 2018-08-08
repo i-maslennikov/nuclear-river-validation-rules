@@ -166,6 +166,7 @@
     <Compile Include="Composition\Composers\MessageSeverityProvider.cs" />
     <Compile Include="Composition\Composers\OptionalAdvertisementMustPassReviewMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderPositionAdvertisementMustHaveOptionalAdvertisementMessageComposer.cs" />
+    <Compile Include="Composition\Composers\PartnerAdvertisementMustNotCauseProblemsToTheAdvertiserMessageComposer.cs" />
     <Compile Include="Composition\Composers\PoiAmountForEntranceShouldMeetMaximumRestrictionsComposer.cs" />
     <Compile Include="Composition\IMessageSeverityProvider.cs" />
     <Compile Include="QueryingServiceSettings.cs" />

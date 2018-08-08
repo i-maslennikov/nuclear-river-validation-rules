@@ -1,9 +1,8 @@
-﻿using System.Linq;
-
-using LinqToDB.Data;
+﻿using LinqToDB.Data;
+using NuClear.ValidationRules.Storage.Model.Erm;
+using System.Linq;
 
 using NuClear.ValidationRules.SingleCheck.Store;
-using NuClear.ValidationRules.Storage.Model.Erm;
 
 namespace NuClear.ValidationRules.SingleCheck.DataLoaders
 {
@@ -13,7 +12,16 @@ namespace NuClear.ValidationRules.SingleCheck.DataLoaders
         {
             const long CategoryCodePremiumAdvertising = 809065011136692321; // Реклама в профилях партнеров (приоритетное размещение)
             const long CategoryCodeAdvertisingAddress = 809065011136692326; // Реклама в профилях партнеров (адреса)
-            var categoryCodes = new[] { CategoryCodePremiumAdvertising, CategoryCodeAdvertisingAddress };
+            const long CategoryCodeBasicPackage = 303; // пакет "Базовый"
+            const long CategoryCodeMediaContextBanner = 395122163464046280; // МКБ
+            const long CategoryCodeContextBanner = 809065011136692318; // КБ
+            var categoryCodes = new[] { CategoryCodePremiumAdvertising, CategoryCodeAdvertisingAddress, CategoryCodeBasicPackage, CategoryCodeMediaContextBanner, CategoryCodeContextBanner };
+
+            var positions =
+                query.GetTable<Position>()
+                     .Where(x => categoryCodes.Contains(x.CategoryCode))
+                     .Execute();
+            store.AddRange(positions);
 
             var firmAddresses = (
                 from op in query.GetTable<OrderPosition>().Where(x => x.IsActive && !x.IsDeleted).Where(x => x.OrderId == order.Id)
@@ -24,12 +32,13 @@ namespace NuClear.ValidationRules.SingleCheck.DataLoaders
             ).Execute();
             store.AddRange(firmAddresses);
             var firmAddressIds = firmAddresses.Select(x => x.Id).ToList();
-            var firmIds = firmAddresses.Select(x => x.FirmId).Distinct().ToList();
 
             if (!firmAddresses.Any())
             {
                 return;
             }
+
+            var firmIds = firmAddresses.Select(x => x.FirmId).Distinct().ToList();
 
             // Нужны заказы этих фирм - вдруг фирма является рекламодателем.
             var firmOrders = query.GetTable<Order>()
@@ -39,14 +48,9 @@ namespace NuClear.ValidationRules.SingleCheck.DataLoaders
                 .Execute();
             store.AddRange(firmOrders);
 
-            // Нужны другие ЗМК заказы на те же самые адреса
-            var positions =
-                query.GetTable<Position>()
-                    .Where(x => categoryCodes.Contains(x.CategoryCode))
-                    .Execute();
-            store.AddRange(positions);
             var positionIds = positions.Select(x => x.Id).ToList();
 
+            // Нужны другие ЗМК заказы на те же самые адреса
             var xxxOrders =
                 from opa in query.GetTable<OrderPositionAdvertisement>()
                     .Where(x => positionIds.Contains(x.PositionId))

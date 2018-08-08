@@ -194,6 +194,7 @@
     <Compile Include="ConsistencyRules\Validation\AtLeastOneLinkedPartnerFirmAddressShouldBeValid.cs" />
     <Compile Include="Dto\RulesetDto.cs" />
     <Compile Include="PriceRules\Aggregates\RulesetAggregateRootActor.cs" />
+    <Compile Include="FirmRules\Validation\PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser.cs" />
     <Compile Include="PriceRules\Validation\PoiAmountForEntranceShouldMeetMaximumRestrictions.cs" />
     <Compile Include="ReplaceDataObjectsActor.cs" />
     <Compile Include="SystemRules\Validation\AmsMessagesShouldBeNew.cs" />
@@ -207,7 +208,6 @@
     <Compile Include="Events\AmsStateIncrementedEvent.cs" />
     <Compile Include="Events\FlowEvent.cs" />
     <Compile Include="FirmRules\Validation\PartnerAdvertisementShouldNotBeSoldToAdvertiser.cs" />
-    <Compile Include="FirmRules\Validation\PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser.cs" />
     <Compile Include="FirmRules\Validation\FirmAddressShouldNotHaveMultiplePartnerAdvertisement.cs" />
     <Compile Include="FirmRules\Validation\FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement.cs" />
     <Compile Include="Messages\ValidationResultCache.cs" />

@@ -72,8 +72,8 @@
         FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement = 71,
         FirmAddressShouldNotHaveMultiplePartnerAdvertisement = 72,
 
-        PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser = 73,
         PartnerAdvertisementShouldNotBeSoldToAdvertiser = 74,
+        PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser = 75,
 
         AmsMessagesShouldBeNew = 80,
 

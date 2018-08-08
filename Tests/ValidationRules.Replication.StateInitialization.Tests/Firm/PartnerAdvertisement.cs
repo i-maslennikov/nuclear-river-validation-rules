@@ -42,35 +42,6 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                         });
 
         // ReSharper disable once UnusedMember.Local
-        private static ArrangeMetadataElement PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser
-            => ArrangeMetadataElement
-                .Config
-                .Name(nameof(PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser))
-                .Aggregate(
-                    // Заказ с премиум-змк в адрес РД
-                    new Aggregates::Order { Id = 1, Begin = MonthStart(1), End = MonthStart(3), FirmId = 1, Scope = 0 },
-                    new Aggregates::Order.PartnerPosition { OrderId = 1, DestinationFirmId = 2, DestinationFirmAddressId = 2, IsPremium = true },
-
-                    // Заказ РД
-                    new Aggregates::Order { Id = 2, Begin = MonthStart(2), End = MonthStart(4), FirmId = 2, Scope = 0 }
-                )
-                .Message(
-                    new Messages::Version.ValidationResult
-                        {
-                            MessageParams =
-                                new MessageParams(
-                                        new Reference<EntityTypeOrder>(1), // Заказ, размещающий ссылку
-                                        new Reference<EntityTypeOrder>(2), // Заказ фирмы-рекламодателя (хоста)
-                                        new Reference<EntityTypeFirm>(2), // Фирма-рекламодатель (хост)
-                                        new Reference<EntityTypeFirmAddress>(2))
-                                    .ToXDocument(),
-                            MessageType = (int)MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser,
-                            PeriodStart = MonthStart(1),
-                            PeriodEnd = MonthStart(3),
-                            OrderId = 1,
-                        });
-
-        // ReSharper disable once UnusedMember.Local
         private static ArrangeMetadataElement FirmAddressShouldNotHaveMultiplePartnerAdvertisement
             => ArrangeMetadataElement
                 .Config

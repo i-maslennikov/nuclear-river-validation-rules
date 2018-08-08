@@ -24,14 +24,16 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             IBulkRepository<Order> bulkRepository,
             IBulkRepository<Order.FirmOrganiationUnitMismatch> invalidFirmRepository,
             IBulkRepository<Order.InvalidFirm> orderInvalidFirmRepository,
-            IBulkRepository<Order.PartnerPosition> premiumProfilePositionRepository)
+            IBulkRepository<Order.PartnerPosition> premiumProfilePositionRepository,
+            IBulkRepository<Order.FmcgCutoutPosition> fmcgCutoutPositionRepository)
             : base(query, equalityComparerFactory)
         {
             HasRootEntity(new OrderAccessor(query),
                           bulkRepository,
                           HasValueObject(new OrderFirmOrganiationUnitMismatchAccessor(query), invalidFirmRepository),
                           HasValueObject(new OrderInvalidFirmAccessor(query), orderInvalidFirmRepository),
-                          HasValueObject(new PartnerPositionAccessor(query), premiumProfilePositionRepository));
+                          HasValueObject(new PartnerPositionAccessor(query), premiumProfilePositionRepository),
+                          HasValueObject(new FmcgCutoutPositionAccessor(query), fmcgCutoutPositionRepository));
         }
 
         public sealed class OrderAccessor : DataChangesHandler<Order>, IStorageBasedDataObjectAccessor<Order>
@@ -52,7 +54,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
 
                         MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement,
                         MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
-                        MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser,
+                        MessageTypeCode.PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser,
                         MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
                     };
 
@@ -120,7 +122,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                     {
                         MessageTypeCode.FirmAddressMustNotHaveMultiplePremiumPartnerAdvertisement,
                         MessageTypeCode.FirmAddressShouldNotHaveMultiplePartnerAdvertisement,
-                        MessageTypeCode.PremiumPartnerAdvertisementMustNotBeSoldToAdvertiser,
+                        MessageTypeCode.PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser,
                         MessageTypeCode.PartnerAdvertisementShouldNotBeSoldToAdvertiser,
                     };
 
@@ -142,7 +144,7 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
                         OrderId = op.OrderId,
                         DestinationFirmAddressId = opa.FirmAddressId.Value,
                         DestinationFirmId = fa.FirmId,
-                        IsPremium = ordersWithPremium.Any(x => x == op.OrderId)
+                        IsPremium = ordersWithPremium.Any(x => x == op.OrderId),
                     };
 
                 return addressPositions;
@@ -152,6 +154,57 @@ namespace NuClear.ValidationRules.Replication.FirmRules.Aggregates
             {
                 var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
                 return new FindSpecification<Order.PartnerPosition>(x => aggregateIds.Contains(x.OrderId));
+            }
+        }
+
+        public sealed class FmcgCutoutPositionAccessor : DataChangesHandler<Order.FmcgCutoutPosition>, IStorageBasedDataObjectAccessor<Order.FmcgCutoutPosition>
+        {
+            private readonly IQuery _query;
+
+            public FmcgCutoutPositionAccessor(IQuery query) : base(CreateInvalidator())
+            {
+                _query = query;
+            }
+
+            private static IRuleInvalidator CreateInvalidator()
+                => new RuleInvalidator
+                    {
+                        MessageTypeCode.PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser
+                    };
+
+            public IQueryable<Order.FmcgCutoutPosition> GetSource()
+            {
+                var opaPositions =
+                    from position in _query.For<Facts::Position>()
+                                           .Where(x => x.CategoryCode == Facts::Position.CategoryCodeBasicPackage
+                                                       || x.CategoryCode == Facts::Position.CategoryCodeMediaContextBanner
+                                                       || x.CategoryCode == Facts::Position.CategoryCodeContextBanner)
+                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.PositionId == position.Id)
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.Id == opa.OrderPositionId)
+                    select new Order.FmcgCutoutPosition
+                        {
+                            OrderId = op.OrderId,
+                        };
+
+                var pricePositions =
+                    from position in _query.For<Facts::Position>()
+                                           .Where(x => x.CategoryCode == Facts::Position.CategoryCodeBasicPackage
+                                                       || x.CategoryCode == Facts::Position.CategoryCodeMediaContextBanner
+                                                       || x.CategoryCode == Facts::Position.CategoryCodeContextBanner)
+                    from pp in _query.For<Facts::PricePosition>().Where(x => x.PositionId == position.Id)
+                    from op in _query.For<Facts::OrderPosition>().Where(x => x.PricePositionId == pp.Id)
+                    select new Order.FmcgCutoutPosition
+                        {
+                            OrderId = op.OrderId,
+                        };
+
+                return opaPositions.Union(pricePositions);
+            }
+
+            public FindSpecification<Order.FmcgCutoutPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
+            {
+                var aggregateIds = commands.OfType<ReplaceValueObjectCommand>().Select(c => c.AggregateRootId).Distinct().ToArray();
+                return new FindSpecification<Order.FmcgCutoutPosition>(x => aggregateIds.Contains(x.OrderId));
             }
         }
 

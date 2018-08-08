@@ -354,4 +354,7 @@
   <data name="PoiLimitExceededForTheEntrance" xml:space="preserve">
     <value>You have exceeded the allowed number of POI for the entrance: {0}. Month: {1}. Address: {2}. Entrance: {3}. Conflicting orders: {4}</value>
   </data>
+  <data name="AtLeastOneLinkedPartnerFirmAddressShouldBeValid" xml:space="preserve">
+    <value>In the position {0} at least one valid address must be specified</value>
+  </data>
 </root>
