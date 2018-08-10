@@ -77,7 +77,10 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
         public static int ToErmRuleCode(this int riverMessageTypeCode)
             => RiverToErmRuleCodeMapping[(MessageTypeCode)riverMessageTypeCode];
 
-        public static bool HasRiverRule(this int ermMessageTypeCode)
-            => RiverToErmRuleCodeMapping.Any(x => x.Value == ermMessageTypeCode);
+        public static int CoerceFromErmRuleCode(this int ermMessageTypeCode)
+        {
+            const int RiverRuleCodesOffsetUsedByErmService = 1000;
+            return ermMessageTypeCode - RiverRuleCodesOffsetUsedByErmService;
+        }
     }
 }

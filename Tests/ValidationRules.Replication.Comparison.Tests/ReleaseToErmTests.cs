@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 using LinqToDB.Data;
 using LinqToDB.Mapping;
@@ -33,6 +34,7 @@ namespace ValidationRules.Replication.Comparison.Tests
                           .GroupBy(x => x.OrganizationUnitId)
                           .Select(x => new { OrganizationUnitId = x.Key, NextRelease = x.Select(y => y.PeriodEndDate).Max().AddSeconds(1) })
                           .Where(x => dc.GetTable<Project>().Any(project => project.IsActive && project.OrganizationUnitId == x.OrganizationUnitId))
+                          //.Take(1)
                           .ToArray();
 
                     foreach (var release in releases)
@@ -46,29 +48,46 @@ namespace ValidationRules.Replication.Comparison.Tests
         }
 
         [Category("CronDaily")]
+        [Category("Mass")]
+        [Category("Release")]
         [TestCaseSource(nameof(Releases))]
-        public void TestRelease(long organizationUnitId, DateTime releaseDate)
+        public async Task TestRelease(long organizationUnitId, DateTime releaseDate)
         {
-            var riverTime = Stopwatch.StartNew();
-            var riverResult = InvokeRiver(organizationUnitId, releaseDate);
-            riverTime.Stop();
+            var riverValidation = Task.Run(() => InvokeRiver(organizationUnitId, releaseDate));
+            var ermValidation = Task.Run(() => InvokeErm(organizationUnitId, releaseDate));
 
-            var ermTime = Stopwatch.StartNew();
-            var ermResult = InvokeErm(organizationUnitId, releaseDate);
-            ermTime.Stop();
+            await Task.WhenAll(riverValidation, ermValidation);
 
-            var diff = riverResult.Keys.Union(ermResult.Keys)
-                .Select(x => new { Key = x, River = TryGetSorted(riverResult, x), Erm = TryGetSorted(ermResult, x) })
-                .OrderBy(x => x.Key)
-                .ToDictionary(x => x.Key, x => new RuleReport(x.River, x.Erm))
-                .ToArray();
+            var riverValidationSummary = await riverValidation;
+            var ermValidationSummary = await ermValidation;
+
+            var diff = riverValidationSummary.Results
+                                             .Keys
+                                             .Union(ermValidationSummary.Results.Keys)
+                                             .Select(ruleCode => new
+                                                 {
+                                                     RuleCode = ruleCode,
+                                                     River = riverValidationSummary.Results
+                                                                                   .TryGetValue(ruleCode, out var riverRuleResult) && riverRuleResult != null
+                                                                 ? riverRuleResult
+                                                                 : Array.Empty<Tuple<long, string>>(),
+                                                     Erm = ermValidationSummary.Results
+                                                                               .TryGetValue(ruleCode, out var ermRuleResult) && ermRuleResult != null
+                                                               ? ermRuleResult
+                                                               : Array.Empty<Tuple<long, string>>()
+                                                 })
+                                             .OrderBy(x => x.RuleCode)
+                                             .ToDictionary(x => x.RuleCode, x => new RuleReport(x.River, x.Erm))
+                                             .ToArray();
 
             Assert.True(diff.All(x => x.Value.OnlyErm + x.Value.OnlyRiver == 0), JsonConvert.SerializeObject(diff, Formatting.Indented));
-            Assert.Pass($"River: {riverTime.ElapsedMilliseconds}, Erm: {ermTime.ElapsedMilliseconds}");
+            Assert.Pass($"River: {riverValidationSummary.ItTakes.TotalMilliseconds}, Erm: {ermValidationSummary.ItTakes.TotalMilliseconds}");
         }
 
-        private IDictionary<int, Tuple<long, string>[]> InvokeRiver(long organizationUnitId, DateTime releaseDate)
+        private ValidationSessionSummary InvokeRiver(long organizationUnitId, DateTime releaseDate)
         {
+            var itTakes = Stopwatch.StartNew();
+
             long[] orderIds;
             long projectId;
             using (var dc = new DataConnection("Erm"))
@@ -82,26 +101,38 @@ namespace ValidationRules.Replication.Comparison.Tests
                 projectId = dc.GetTable<Project>().Where(x => x.IsActive && x.OrganizationUnitId == organizationUnitId).Select(x => x.Id).Single();
             }
 
-            return _riverService.ValidateMassRelease(orderIds, projectId, releaseDate)
-                                .Messages
-                                .GroupBy(x => x.RuleCode.ToErmRuleCode(), x => Tuple.Create(x.TargetEntityId, x.MessageText))
-                                .Where(x => x.Key != 0)
-                                .ToDictionary(x => x.Key, x => x.ToArray());
+            var sessionResults = _riverService.ValidateMassRelease(orderIds, projectId, releaseDate)
+                                              .Messages
+                                              .GroupBy(x => x.RuleCode, x => Tuple.Create(x.TargetEntityId, x.MessageText))
+                                              .Where(x => x.Key != 0)
+                                              .ToDictionary(x => x.Key, x => x.ToArray());
+
+            return new ValidationSessionSummary
+                {
+                    Results = sessionResults,
+                    ItTakes = itTakes.Elapsed
+                };
         }
 
-        private IDictionary<int, Tuple<long, string>[]> InvokeErm(long organizationUnitId, DateTime releaseDate)
+        private ValidationSessionSummary InvokeErm(long organizationUnitId, DateTime releaseDate)
         {
-            return _ermService.ValidateMassRelease(organizationUnitId, releaseDate).Messages
-                              .GroupBy(x => x.RuleCode, x => Tuple.Create(x.TargetEntityId, x.MessageText))
-							  .Where(x => x.Key.HasRiverRule())
-                              .ToDictionary(x => x.Key, x => x.ToArray());
+            var itTakes = Stopwatch.StartNew();
+            var sessionResults = _ermService.ValidateMassRelease(organizationUnitId, releaseDate).Messages
+                                            .GroupBy(x => x.RuleCode.CoerceFromErmRuleCode(), x => Tuple.Create(x.TargetEntityId, x.MessageText))
+                                            .Where(x => x.Key != 0)
+                                            .ToDictionary(x => x.Key, x => x.ToArray());
+
+            return new ValidationSessionSummary
+                {
+                    Results = sessionResults,
+                    ItTakes = itTakes.Elapsed
+                };
         }
 
-        private Tuple<long, string>[] TryGetSorted(IDictionary<int, Tuple<long, string>[]> result, int key)
+        private sealed class ValidationSessionSummary
         {
-            Tuple<long, string>[] value;
-            result.TryGetValue(key, out value);
-            return value ?? Array.Empty<Tuple<long, string>>();
+            public IDictionary<int, Tuple<long, string>[]> Results { get; set; }
+            public TimeSpan ItTakes { get; set; }
         }
 
         private class RuleReport
