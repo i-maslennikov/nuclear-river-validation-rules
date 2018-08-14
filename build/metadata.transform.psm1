@@ -101,7 +101,7 @@ function Get-AmsFactsTopicMetadata($Context){
 function Get-RulesetsFactsTopicsMetadata($Context){
 	switch($Context.EnvType){
 		'Test' {
-			if ($Context.RulesetsFactsTopic -ne $null){
+			if (($Context.RulesetsFactsTopic -ne $null) and ($Context.RulesetsFactsTopic -ne "")){
 				return @{
 					'RulesetsFactsTopic' = $Context.RulesetsFactsTopic
 				}
