@@ -111,6 +111,7 @@ function Parse-EnvironmentMetadata ($Properties) {
 	$context.EnvironmentName = $environmentName
 
 	$context.UseCaseRoute = $Properties['UseCaseRoute']
+	$context.RulesetsFactsTopic = $Properties['RulesetsFactsTopic']
 
 	if ($Properties.ContainsKey('EntryPoints')){
 		$entryPoints = $Properties['EntryPoints']
