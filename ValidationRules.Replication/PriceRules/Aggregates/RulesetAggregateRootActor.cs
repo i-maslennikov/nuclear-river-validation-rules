@@ -38,9 +38,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             }
 
             private static IRuleInvalidator CreateInvalidator()
-                => new RuleInvalidator
-                {
-                };
+                => new RuleInvalidator();
 
             public IQueryable<Ruleset> GetSource()
                 => _query.For<Facts::Ruleset>().Select(x => new Ruleset { Id = x.Id });

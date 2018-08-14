@@ -53,7 +53,7 @@ namespace ValidationRules.Hosting.Common
             _consumer = new Consumer(privateConfig);
 
             _backpressureBehaviour = privateConfig.TryGetValue("queued.max.messages.kbytes", out var rawQueuedMaxKb)
-                                         ? (Action)new MaxQueuedKbBackpressureBehaviour(int.Parse((string)rawQueuedMaxKb),
+                                         ? (Action)new MaxQueuedKbBackpressureBehaviour(long.Parse((string)rawQueuedMaxKb) * 1024,
                                                                                         _topicPartitionOffsets.Select(x => new TopicPartition(x.Topic, x.Partition)),
                                                                                         _consumer,
                                                                                         _messageQueue,
@@ -220,7 +220,7 @@ namespace ValidationRules.Hosting.Common
 
         private sealed class MaxQueuedKbBackpressureBehaviour
         {
-            private readonly int _maxQueuedKbThreshold;
+            private readonly long _maxQueuedBytesThreshold;
             private readonly IEnumerable<TopicPartition> _targetPartitions;
             private readonly Consumer _consumer;
             private readonly CompactedKafkaMessageQueue _messageQueue;
@@ -229,13 +229,13 @@ namespace ValidationRules.Hosting.Common
             private bool _isBackpressureMode;
 
             public MaxQueuedKbBackpressureBehaviour(
-                int maxQueuedKbThreshold,
+                long maxQueuedBytesThreshold,
                 IEnumerable<TopicPartition> targetPartitions,
                 Consumer consumer,
                 CompactedKafkaMessageQueue messageQueue,
                 ITracer tracer)
             {
-                _maxQueuedKbThreshold = maxQueuedKbThreshold;
+                _maxQueuedBytesThreshold = maxQueuedBytesThreshold;
                 _targetPartitions = targetPartitions;
                 _consumer = consumer;
                 _messageQueue = messageQueue;
@@ -244,15 +244,15 @@ namespace ValidationRules.Hosting.Common
 
             public void Execute()
             {
-                var actualQueuedKb = _messageQueue.ActualQueuedKb;
-                if (_maxQueuedKbThreshold <= actualQueuedKb)
+                var actualQueuedBytes = _messageQueue.ActualQueuedBytes;
+                if (_maxQueuedBytesThreshold <= actualQueuedBytes)
                 {
                     if (_isBackpressureMode)
                     {
                         return;
                     }
 
-                    _tracer.Debug($"KafkaAudit. Backpressure mode. Limit for messages in queue is {_maxQueuedKbThreshold} Kb. Actual queued {actualQueuedKb} Kb");
+                    _tracer.Debug($"KafkaAudit. Backpressure mode. Limit for messages in queue is {_maxQueuedBytesThreshold} bytes. Actual queued {actualQueuedBytes} bytes");
 
                     var pausedPartitions = _consumer.Pause(_targetPartitions);
                     foreach (var partition in pausedPartitions)

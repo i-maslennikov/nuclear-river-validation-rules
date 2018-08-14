@@ -9,7 +9,7 @@ namespace ValidationRules.Hosting.Common
     {
         private readonly Dictionary<byte[], Message> _messageKey2LatestPayloadMap = new Dictionary<byte[], Message>(ByteArrayEqualityComparer.Instance);
 
-        public int ActualQueuedKb { get; private set; }
+        public long ActualQueuedBytes { get; private set; }
 
         public void Enqueue(Message message)
         {
@@ -17,11 +17,11 @@ namespace ValidationRules.Hosting.Common
             {
                 if (_messageKey2LatestPayloadMap.TryGetValue(message.Key, out var existingMessage))
                 {
-                    ActualQueuedKb -= SizeOfInKb(existingMessage);
+                    ActualQueuedBytes -= SizeOf(existingMessage);
                 }
 
                 _messageKey2LatestPayloadMap[message.Key] = message;
-                ActualQueuedKb += SizeOfInKb(message);
+                ActualQueuedBytes += SizeOf(message);
             }
         }
 
@@ -35,7 +35,7 @@ namespace ValidationRules.Hosting.Common
                     if (existingMessage.Offset == message.Offset)
                     {
                         _messageKey2LatestPayloadMap.Remove(message.Key);
-                        ActualQueuedKb -= SizeOfInKb(message);
+                        ActualQueuedBytes -= SizeOf(message);
                     }
                 }
             }
@@ -46,7 +46,7 @@ namespace ValidationRules.Hosting.Common
             lock (_messageKey2LatestPayloadMap)
             {
                 _messageKey2LatestPayloadMap.Clear();
-                ActualQueuedKb = 0;
+                ActualQueuedBytes = 0;
             }
         }
 
@@ -61,11 +61,11 @@ namespace ValidationRules.Hosting.Common
             }
         }
 
-        private int SizeOfInKb(Message message)
+        private int SizeOf(Message message)
         {
             var keySize = message.Key?.Length ?? 0;
             var payloadSize = message.Value?.Length ?? 0;
-            return (keySize + payloadSize) / 1024;
+            return keySize + payloadSize;
         }
 
         private sealed class ByteArrayEqualityComparer : IEqualityComparer<byte[]>
