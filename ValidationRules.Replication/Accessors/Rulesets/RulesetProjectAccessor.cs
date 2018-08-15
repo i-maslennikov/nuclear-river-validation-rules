@@ -45,6 +45,31 @@ namespace NuClear.ValidationRules.Replication.Accessors.Rulesets
         public IReadOnlyCollection<IEvent> HandleCreates(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects) => Array.Empty<IEvent>();
         public IReadOnlyCollection<IEvent> HandleUpdates(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects) => Array.Empty<IEvent>();
         public IReadOnlyCollection<IEvent> HandleDeletes(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects) => Array.Empty<IEvent>();
-        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects) => Array.Empty<IEvent>();
+
+        public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<Ruleset.RulesetProject> dataObjects)
+        {
+            if (!dataObjects.Any())
+            {
+                return Array.Empty<IEvent>();
+            }
+
+            var rulesetsIds = dataObjects.Select(x => x.RulesetId)
+                                         .Distinct()
+                                         .ToList();
+
+            var firmIds = from ruleset in _query.For<Ruleset>().Where(x => rulesetsIds.Contains(x.Id))
+                          from rulesetProject in _query.For<Ruleset.RulesetProject>().Where(x => x.RulesetId == ruleset.Id)
+                          from project in _query.For<Project>().Where(x => x.Id == rulesetProject.ProjectId)
+                          from order in _query.For<Order>()
+                                              .Where(x => ruleset.BeginDate <= x.BeginDistribution
+                                                          && x.BeginDistribution < ruleset.EndDate
+                                                          && x.DestOrganizationUnitId == project.OrganizationUnitId)
+                          select order.FirmId;
+
+            return new EventCollectionHelper<Ruleset>
+                {
+                    { typeof(Firm), firmIds.Distinct() }
+                };
+        }
     }
 }
