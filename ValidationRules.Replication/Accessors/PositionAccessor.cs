@@ -75,10 +75,7 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 from order in _query.For<Order>().Where(x => orderIds.Contains(x.Id))
                 select order.FirmId;
 
-            var priceIds = from pricePosition in _query.For<PricePosition>().Where(x => positionIds.Contains(x.PositionId))
-                           select pricePosition.PriceId;
-
-            return new EventCollectionHelper<Position> { { typeof(Order), orderIds }, { typeof(Firm), firmIds }, { typeof(Price), priceIds } };
+            return new EventCollectionHelper<Position> { { typeof(Order), orderIds }, { typeof(Firm), firmIds } };
         }
     }
 }
