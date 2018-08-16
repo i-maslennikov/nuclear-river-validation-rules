@@ -23,7 +23,7 @@ namespace ValidationRules.Replication.Comparison.Tests
     {
         private const int OrderPerRule = 1;
 
-        private IEnumerable<MessageTypeCode> Rules
+        private static IEnumerable<MessageTypeCode> Rules
             => Enum.GetValues(typeof(MessageTypeCode)).Cast<MessageTypeCode>();
 
         [TestCaseSource(nameof(Rules))]
@@ -46,7 +46,7 @@ namespace ValidationRules.Replication.Comparison.Tests
             }
         }
 
-        private IEnumerable<long> Orders
+        private static IEnumerable<long> Orders
             => Array.Empty<long>();
 
         [TestCaseSource(nameof(Orders))]

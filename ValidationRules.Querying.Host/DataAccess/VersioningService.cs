@@ -30,6 +30,14 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             _kafkaMessageFlowInfoProvider = kafkaMessageFlowInfoProvider;
         }
 
+        public long GetLatestVersion()
+        {
+            using (var connection = _factory.CreateDataConnection(ConfigurationString))
+            {
+                return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
+            }
+        }
+
         public Task<long> WaitForVersion(Guid ermToken)
         {
             var amsCount = _kafkaMessageFlowInfoProvider.GetFlowSize(AmsFactsFlow.Instance);
@@ -101,14 +109,6 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
 
                 sw.Stop();
                 await Task.Delay(sw.Elapsed < interval ? interval - sw.Elapsed : TimeSpan.Zero);
-            }
-        }
-
-        public long GetLatestVersion()
-        {
-            using (var connection = _factory.CreateDataConnection(ConfigurationString))
-            {
-                return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
             }
         }
 
