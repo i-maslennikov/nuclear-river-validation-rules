@@ -16,7 +16,7 @@ using ValidationRules.Replication.Comparison.Tests.RiverService;
 namespace ValidationRules.Replication.Comparison.Tests
 {
     [TestFixture]
-    public sealed class ReleaseToErmTests
+    public sealed class ReleaseToEtalonTests
     {
         private readonly RiverToErmResultAdapter _testRiverService = new RiverToErmResultAdapter("TestEnvironment");
         private readonly RiverToErmResultAdapter _etalonRiverService = new RiverToErmResultAdapter("EtalonEnvironment");
