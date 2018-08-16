@@ -123,7 +123,7 @@ namespace NuClear.ValidationRules.Querying.Host.DI
             var kafkaSettingsFactory =
                 new KafkaSettingsFactory(new Dictionary<IMessageFlow, string>
                                              {
-                                                 [VersioningService.AmsFactsFlow.Instance] = connectionStringSettings.GetConnectionString(AmsConnectionStringIdentity.Instance)
+                                                 [AliasForAmsFactsFlow.Instance] = connectionStringSettings.GetConnectionString(AmsConnectionStringIdentity.Instance)
                                              },
                                          environmentSettings);
 
