@@ -94,22 +94,15 @@ namespace NuClear.ValidationRules.OperationsProcessing
                     x => x.Match<object>()
                           .DependOn<Facts::Order>()
                           .DependOn<Facts::Price>())
-                .Aggregate<PriceAggregates::Price>(
-                    x => x.Match<Facts::Price>()
-                          .DependOn<Facts::AssociatedPositionsGroup>()
-                          .DependOn<Facts::Position>()
-                          .DependOn<Facts::PricePosition>()
-                          .DependOn<Facts::NomenclatureCategory>())
                 .Aggregate<PriceAggregates::Firm>(
                     x => x.Match<Facts::Firm>()
                           .DependOn<Facts::Order>()
                           .DependOn<Facts::OrderItem>()
-                          .DependOn<Facts::AssociatedPosition>()
-                          .DependOn<Facts::AssociatedPositionsGroup>()
                           .DependOn<Facts::Category>()
-                          .DependOn<Facts::DeniedPosition>()
-                          .DependOn<Facts::PricePosition>()
-                          .DependOn<Facts::RulesetRule>())
+                          .DependOn<Facts::Ruleset>())
+                .Aggregate<PriceAggregates::Ruleset>(
+                    x => x.Match<Facts::Ruleset>()
+                          .DependOn<Facts::NomenclatureCategory>())
 
                 // ProjectAggregates
                 .Aggregate<ProjectAggregates::Order>(

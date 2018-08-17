@@ -10,8 +10,9 @@ using NuClear.OperationsLogging.API;
 using NuClear.OperationsLogging.Transports.ServiceBus;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus.Factories;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
-using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
-using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.AmsFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.ErmFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 using NuClear.ValidationRules.Replication.Events;
 
@@ -34,8 +35,14 @@ namespace NuClear.ValidationRules.Replication.Host.Factories
 
             IEventLoggingStrategy<TEvent> strategy;
 
-            if (Equals(messageFlow, FactsFlow.Instance) ||
-                Equals(messageFlow, AmsFactsFlow.Instance))
+            var vrFactsFlows = new IEquatable<IMessageFlow>[]
+                {
+                    ErmFactsFlow.Instance,
+                    AmsFactsFlow.Instance,
+                    RulesetFactsFlow.Instance
+                };
+
+            if (vrFactsFlows.Contains(messageFlow))
             {
                 strategy = ResolveServiceBusStrategy<TEvent>(AggregatesFlow.Instance);
             }

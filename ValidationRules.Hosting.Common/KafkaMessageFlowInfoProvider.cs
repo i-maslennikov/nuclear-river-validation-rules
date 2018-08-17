@@ -4,6 +4,8 @@ using Confluent.Kafka;
 
 using NuClear.Messaging.API.Flows;
 
+using ValidationRules.Hosting.Common.Settings.Kafka;
+
 namespace ValidationRules.Hosting.Common
 {
     public sealed class KafkaMessageFlowInfoProvider
@@ -18,7 +20,6 @@ namespace ValidationRules.Hosting.Common
         public long GetFlowSize(IMessageFlow messageFlow)
         {
             var settings = _kafkaSettingsFactory.CreateInfoSettings(messageFlow);
-
             using (var consumer = new Consumer(settings.Config))
             {
                 var offsets = consumer.QueryWatermarkOffsets(settings.TopicPartition, settings.InfoTimeout);

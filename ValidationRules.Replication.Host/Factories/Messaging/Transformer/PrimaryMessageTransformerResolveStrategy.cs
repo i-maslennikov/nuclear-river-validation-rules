@@ -4,8 +4,8 @@ using NuClear.Messaging.API.Flows.Metadata;
 using NuClear.Messaging.DI.Factories.Unity.Transformers.Resolvers;
 using NuClear.OperationsProcessing.Transports.ServiceBus.Primary;
 using NuClear.Replication.OperationsProcessing.Transports.ServiceBus;
-using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.ErmFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 
 namespace NuClear.ValidationRules.Replication.Host.Factories.Messaging.Transformer
@@ -17,7 +17,7 @@ namespace NuClear.ValidationRules.Replication.Host.Factories.Messaging.Transform
         {
             var messageFlow = messageFlowMetadata.MessageFlow;
 
-            if (messageFlow.Equals(FactsFlow.Instance))
+            if (messageFlow.Equals(ErmFactsFlow.Instance))
             {
                 resolvedFlowReceiverType = typeof(BinaryEntireBrokeredMessage2TrackedUseCaseTransformer);
                 return true;

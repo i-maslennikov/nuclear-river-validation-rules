@@ -11,7 +11,7 @@ using NuClear.Replication.Core;
 using NuClear.Replication.Core.Actors;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.ValidationRules.Storage;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 using NuClear.ValidationRules.Storage.SchemaInitializer;
 
 namespace NuClear.ValidationRules.StateInitialization.Host
@@ -86,8 +86,9 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 
         public static SchemaInitializationCommand Facts { get; }
             = new SchemaInitializationCommand(Schema.Facts,
-                new HashSet<Type>(DataObjectTypesProviderFactory.FactTypes.Concat(DataObjectTypesProviderFactory.AmsFactTypes)), FactsConnectionStringIdentity.Instance,
-                new[] { "Facts" });
+                                              DataObjectTypesProviderFactory.AllSourcesFactTypes,
+                                              FactsConnectionStringIdentity.Instance,
+                                              new[] { "Facts" });
 
         public static SchemaInitializationCommand Aggregates { get; }
 			= new SchemaInitializationCommand(Schema.Aggregates, DataObjectTypesProviderFactory.AggregateTypes, AggregatesConnectionStringIdentity.Instance,

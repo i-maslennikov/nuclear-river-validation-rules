@@ -75,7 +75,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                         { MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject, func },
                         { MessageTypeCode.FirmPositionMustNotHaveDeniedPositions, func },
                         { MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject, func },
-                        MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone,
+                        MessageTypeCode.FirmAssociatedPositionShouldNotStayAlone
                     };
 
             private static IReadOnlyCollection<long> GetRelatedOrders(IReadOnlyCollection<Firm.FirmPosition> arg, IQuery query)
@@ -99,8 +99,8 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                     select new { FirmId = begin.FirmId, Begin = begin.Date, End = end.Value };
 
                 var principals =
-                    from position in _query.For<Facts::OrderItem>()
-                    from order in _query.For<Facts::Order>().Where(x => x.Id == position.OrderId)
+                    from order in _query.For<Facts::Order>()
+                    from position in _query.For<Facts::OrderItem>().Where(x => order.Id == x.OrderId)
                     from period in periods.Where(x => x.FirmId == order.FirmId && x.Begin >= order.BeginDistribution && x.End <= order.EndDistributionPlan)
                     from category in _query.For<Facts::Category>().Where(x => x.Id == position.CategoryId).DefaultIfEmpty()
                     select new Firm.FirmPosition
@@ -157,58 +157,34 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Firm.FirmAssociatedPosition> GetSource()
             {
-                var associatedByPrice =
-                    from item in _query.For<Facts::OrderItem>()
-                    from apg in _query.For<Facts::AssociatedPositionsGroup>().Where(x => x.PricePositionId == item.PricePositionId)
-                    from ap in _query.For<Facts::AssociatedPosition>().Where(x => x.AssociatedPositionsGroupId == apg.Id)
-                    select new
-                        {
-                            item.OrderId,
-                            item.OrderPositionId,
-                            item.PackagePositionId,
-                            item.ItemPositionId,
+                const int BindingTypeMatch = 1;
+                const int BindingTypeNoDependency = 2;
 
-                            PrincipalPositionId = ap.PositionId,
-                            ap.ObjectBindingType,
-
-                            Source = Firm.PositionSources.Price,
-                        };
-
-                var associatedByRuleset =
-                    from item in _query.For<Facts::OrderItem>()
-                    from rule in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == Facts::RulesetRule.Associated)
-                                       .Where(x => x.DependentPositionId == item.ItemPositionId)
-                    select new
-                        {
-                            item.OrderId,
-                            item.OrderPositionId,
-                            item.PackagePositionId,
-                            item.ItemPositionId,
-
-                            rule.PrincipalPositionId,
-                            rule.ObjectBindingType,
-
-                            Source = Firm.PositionSources.Ruleset,
-                        };
-
-                var result =
-                    from associated in associatedByPrice.Union(associatedByRuleset)
-                    from order in _query.For<Facts::Order>().Where(x => x.Id == associated.OrderId)
+                var evaluatedRestrictions =
+                    from order in _query.For<Facts::Order>()
+                    from item in _query.For<Facts::OrderItem>().Where(x => x.OrderId == order.Id)
+                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                    from rp in _query.For<Facts::Ruleset.RulesetProject>().Where(x => x.ProjectId == project.Id)
+                    from rule in _query.For<Facts::Ruleset.AssociatedRule>().Where(x => x.AssociatedNomenclatureId == item.ItemPositionId)
+                    where _query.For(Specs.Find.Facts.Ruleset)
+                                .Any(x => x.Id == rule.RulesetId
+                                            && x.Id == rp.RulesetId
+                                            && x.BeginDate <= order.BeginDistribution
+                                            && order.BeginDistribution < x.EndDate)
                     select new Firm.FirmAssociatedPosition
                         {
                             FirmId = order.FirmId,
-                            OrderId = associated.OrderId,
-                            OrderPositionId = associated.OrderPositionId,
-                            PackagePositionId = associated.PackagePositionId,
-                            ItemPositionId = associated.ItemPositionId,
+                            OrderId = order.Id,
 
-                            PrincipalPositionId = associated.PrincipalPositionId,
-                            BindingType = associated.ObjectBindingType,
+                            ItemPositionId = item.ItemPositionId,
+                            OrderPositionId = item.OrderPositionId,
+                            PackagePositionId = item.PackagePositionId,
 
-                            Source = associated.Source,
+                            PrincipalPositionId = rule.PrincipalNomenclatureId,
+                            BindingType = rule.ConsideringBindingObject ? BindingTypeMatch : BindingTypeNoDependency
                         };
 
-                return result;
+                return evaluatedRestrictions.Distinct();
             }
 
             public FindSpecification<Firm.FirmAssociatedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)
@@ -241,58 +217,30 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Firm.FirmDeniedPosition> GetSource()
             {
-                var deniedByPrice =
-                    from item in _query.For<Facts::OrderItem>()
-                    from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == item.PricePositionId)
-                    from deniedPosition in _query.For<Facts::DeniedPosition>().Where(x => x.PriceId == pricePosition.PriceId && x.PositionId == pricePosition.PositionId)
-                    select new
-                        {
-                            item.OrderId,
-                            item.OrderPositionId,
-                            item.PackagePositionId,
-                            item.ItemPositionId,
-
-                            DeniedPositionId = deniedPosition.PositionDeniedId,
-                            deniedPosition.ObjectBindingType,
-
-                            Source = Firm.PositionSources.Price,
-                        };
-
-                var deniedByRuleset =
-                    from item in _query.For<Facts::OrderItem>()
-                    from rule in _query.For<Facts::RulesetRule>().Where(x => x.RuleType == Facts::RulesetRule.Denied)
-                                       .Where(x => x.DependentPositionId == item.ItemPositionId)
-                    select new
-                        {
-                            item.OrderId,
-                            item.OrderPositionId,
-                            item.PackagePositionId,
-                            item.ItemPositionId,
-
-                            DeniedPositionId = rule.PrincipalPositionId,
-                            rule.ObjectBindingType,
-
-                            Source = Firm.PositionSources.Ruleset,
-                        };
-
-                var result =
-                    from denied in deniedByPrice.Union(deniedByRuleset)
-                    from order in _query.For<Facts::Order>().Where(x => x.Id == denied.OrderId)
+                var evaluatedRestrictions =
+                    from order in _query.For<Facts::Order>()
+                    from item in _query.For<Facts::OrderItem>().Where(x => x.OrderId == order.Id)
+                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                    from rp in _query.For<Facts::Ruleset.RulesetProject>().Where(x => x.ProjectId == project.Id)
+                    from ruleset in _query.For(Specs.Find.Facts.Ruleset)
+                                          .Where(x => x.Id == rp.RulesetId
+                                                      && x.BeginDate <= order.BeginDistribution
+                                                      && order.BeginDistribution < x.EndDate)
+                    from rule in _query.For<Facts::Ruleset.DeniedRule>().Where(x => x.RulesetId == ruleset.Id && x.NomenclatureId == item.ItemPositionId)
                     select new Firm.FirmDeniedPosition
                         {
                             FirmId = order.FirmId,
-                            OrderId = denied.OrderId,
-                            OrderPositionId = denied.OrderPositionId,
-                            PackagePositionId = denied.PackagePositionId,
-                            ItemPositionId = denied.ItemPositionId,
+                            OrderId = order.Id,
 
-                            DeniedPositionId = denied.DeniedPositionId,
-                            BindingType = denied.ObjectBindingType,
+                            OrderPositionId = item.OrderPositionId,
+                            PackagePositionId = item.PackagePositionId,
+                            ItemPositionId = item.ItemPositionId,
 
-                            Source = denied.Source,
+                            DeniedPositionId = rule.DeniedNomenclatureId,
+                            BindingType = rule.BindingObjectStrategy
                         };
 
-                return result;
+                return evaluatedRestrictions.Distinct();
             }
 
             public FindSpecification<Firm.FirmDeniedPosition> GetFindSpecification(IReadOnlyCollection<ICommand> commands)

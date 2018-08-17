@@ -151,15 +151,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to В Позиции прайс-листа {0} содержится более одной группы сопутствующих позиций, что не поддерживается системой..
-        /// </summary>
-        internal static string AssociatedPositionsGroupCount {
-            get {
-                return ResourceManager.GetString("AssociatedPositionsGroupCount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to В позиции {0} необходимо указать хотя бы один валидный адрес.
         /// </summary>
         internal static string AtLeastOneLinkedPartnerFirmAddressShouldBeValid {
@@ -507,15 +498,6 @@ namespace NuClear.ValidationRules.Querying.Host.Properties {
         internal static string LinkedFirmShouldBeValid_Deleted {
             get {
                 return ResourceManager.GetString("LinkedFirmShouldBeValid_Deleted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to В позиции прайса {0} необходимо указать минимальное количество рекламы в выпуск..
-        /// </summary>
-        internal static string MinimalAdvertisementRestrictionShouldBeSpecified {
-            get {
-                return ResourceManager.GetString("MinimalAdvertisementRestrictionShouldBeSpecified", resourceCulture);
             }
         }
         

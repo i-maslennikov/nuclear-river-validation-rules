@@ -20,16 +20,11 @@ namespace NuClear.ValidationRules.Storage
 
                 config.Entity<Account>().HasSchemaName(BillingSchema).HasTableName("Accounts").HasPrimaryKey(x => x.Id);
                 config.Entity<AccountDetail>().HasSchemaName(BillingSchema).HasTableName("AccountDetails").HasPrimaryKey(x => x.Id);
-                config.Entity<AssociatedPositionsGroup>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositionsGroups").HasPrimaryKey(x => x.Id);
-                config.Entity<AssociatedPosition>().HasSchemaName(BillingSchema).HasTableName("AssociatedPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<BranchOffice>().HasSchemaName(BillingSchema).HasTableName("BranchOffices").HasPrimaryKey(x => x.Id);
                 config.Entity<BranchOfficeOrganizationUnit>().HasSchemaName(BillingSchema).HasTableName("BranchOfficeOrganizationUnits").HasPrimaryKey(x => x.Id);
                 config.Entity<Deal>().HasSchemaName(BillingSchema).HasTableName("Deals").HasPrimaryKey(x => x.Id);
-                config.Entity<DeniedPosition>().HasSchemaName(BillingSchema).HasTableName("DeniedPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<ReleaseInfo>().HasSchemaName(BillingSchema).HasTableName("ReleaseInfos").HasPrimaryKey(x => x.Id);
                 config.Entity<ReleaseWithdrawal>().HasSchemaName(BillingSchema).HasTableName("ReleasesWithdrawals").HasPrimaryKey(x => x.Id);
-                config.Entity<Ruleset>().HasSchemaName(OrderValidationSchema).HasTableName("Rulesets").HasPrimaryKey(x => x.Id);
-                config.Entity<RulesetRule>().HasSchemaName(OrderValidationSchema).HasTableName("RulesetRules");
                 config.Entity<Order>().HasSchemaName(BillingSchema).HasTableName("Orders").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPosition>().HasSchemaName(BillingSchema).HasTableName("OrderPositions").HasPrimaryKey(x => x.Id);
                 config.Entity<OrderPositionCostPerClick>().HasSchemaName(BillingSchema).HasTableName("OrderPositionCostPerClicks");
@@ -60,6 +55,8 @@ namespace NuClear.ValidationRules.Storage
                 config.Entity<UnlimitedOrder>().HasSchemaName(OrderValidationSchema).HasTableName("UnlimitedOrders");
 
                 config.Entity<UseCaseTrackingEvent>().HasSchemaName("Shared").HasTableName("UseCaseTrackingEvents");
+
+                config.Entity<NomenclatureCategory>().HasSchemaName(BillingSchema).HasTableName("NomenclatureCategories");
 
                 return schema;
             }

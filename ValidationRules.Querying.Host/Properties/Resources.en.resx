@@ -180,9 +180,6 @@
   <data name="LinkedFirmShouldBeValid_ClosedForever" xml:space="preserve">
     <value>The company {0} is hidden forever</value>
   </data>
-  <data name="AssociatedPositionsGroupCount" xml:space="preserve">
-    <value>The price-list item {0} contains more than one group of accompanying items, which is not supported by the system.</value>
-  </data>
   <data name="LegalPerson" xml:space="preserve">
     <value>Legal entity of the Customer</value>
   </data>
@@ -281,9 +278,6 @@
   </data>
   <data name="OrderMustUseCategoriesOnlyAvailableInProject" xml:space="preserve">
     <value>In the item {0}, there are categories that are not referenced to the company division in the city of order destination: </value>
-  </data>
-  <data name="MinimalAdvertisementRestrictionShouldBeSpecified" xml:space="preserve">
-    <value>In the price-list item {0}, it is necessary to specify minimum quantity of advertisements per issue.</value>
   </data>
   <data name="LegalPersonProfileBargainShouldNotBeExpired" xml:space="preserve">
     <value>A contract with expiry date earlier than the date of order signature is specified in the profile {0} of the client's legal entity.</value>

@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using LinqToDB;
 
-using NuClear.Messaging.API.Flows;
-
 using ValidationRules.Hosting.Common;
 
 using Version = NuClear.ValidationRules.Storage.Model.Messages.Version;
@@ -30,9 +28,17 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
             _kafkaMessageFlowInfoProvider = kafkaMessageFlowInfoProvider;
         }
 
+        public long GetLatestVersion()
+        {
+            using (var connection = _factory.CreateDataConnection(ConfigurationString))
+            {
+                return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
+            }
+        }
+
         public Task<long> WaitForVersion(Guid ermToken)
         {
-            var amsCount = _kafkaMessageFlowInfoProvider.GetFlowSize(AmsFactsFlow.Instance);
+            var amsCount = _kafkaMessageFlowInfoProvider.GetFlowSize(AliasForAmsFactsFlow.Instance);
 
             return WaitForVersion(ermToken, amsCount, WaitInterval, WaitTimeout);
         }
@@ -102,22 +108,6 @@ namespace NuClear.ValidationRules.Querying.Host.DataAccess
                 sw.Stop();
                 await Task.Delay(sw.Elapsed < interval ? interval - sw.Elapsed : TimeSpan.Zero);
             }
-        }
-
-        public long GetLatestVersion()
-        {
-            using (var connection = _factory.CreateDataConnection(ConfigurationString))
-            {
-                return connection.GetTable<Version.ValidationResult>().Max(x => x.VersionId);
-            }
-        }
-
-        // не хочется референсить на OperationProcessing, поэтому копипаст
-        private sealed class AmsFactsFlow : MessageFlowBase<AmsFactsFlow>
-        {
-            public override Guid Id => new Guid("A2878E80-992A-4602-8FD6-B10AE85BBFFE");
-
-            public override string Description => nameof(AmsFactsFlow);
         }
     }
 }

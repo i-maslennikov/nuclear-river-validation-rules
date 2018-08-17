@@ -11,8 +11,8 @@ using NuClear.Security.API.Context;
 using NuClear.Telemetry;
 using NuClear.Tracing.API;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
-using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
-using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.AmsFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.ErmFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 
 using Quartz;
@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.Host.Jobs
         protected override void ExecuteInternal(IJobExecutionContext context)
         {
             WithinErrorLogging(ReportMemoryUsage);
-            WithinErrorLogging(ReportServiceBusQueueLength<FactsFlow, PrimaryProcessingQueueLengthIdentity>);
+            WithinErrorLogging(ReportServiceBusQueueLength<ErmFactsFlow, PrimaryProcessingQueueLengthIdentity>);
             WithinErrorLogging(ReportServiceBusQueueLength<AggregatesFlow, FinalProcessingAggregateQueueLengthIdentity>);
             WithinErrorLogging(ReportServiceBusQueueLength<MessagesFlow, MessagesQueueLengthIdentity>);
             WithinErrorLogging(ReportKafkaOffset<AmsFactsFlow, AmsFactsQueueLengthIdentity>);

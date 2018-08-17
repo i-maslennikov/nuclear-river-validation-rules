@@ -153,13 +153,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    Rule(MessageTypeCode.AssociatedPositionsGroupCount,
-                         single: RuleSeverityLevel.Warning,
-                         singleForApprove: RuleSeverityLevel.Error,
-                         manualReport: RuleSeverityLevel.Warning,
-                         prerelease: RuleSeverityLevel.Warning,
-                         release: RuleSeverityLevel.Warning),
-
                     Rule(MessageTypeCode.FirmAssociatedPositionMustHavePrincipal,
                          single: RuleSeverityLevel.Error,
                          singleForApprove: RuleSeverityLevel.Error,
@@ -188,11 +181,6 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          single: RuleSeverityLevel.Error,
                          singleForApprove: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
-                         prerelease: RuleSeverityLevel.Error,
-                         release: RuleSeverityLevel.Error),
-
-                    Rule(MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified,
-                         single: RuleSeverityLevel.Warning,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 

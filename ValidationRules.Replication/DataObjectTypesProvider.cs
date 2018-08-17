@@ -18,8 +18,6 @@ namespace NuClear.ValidationRules.Replication
                     {
                             typeof(Account),
                             typeof(AccountDetail),
-                            typeof(AssociatedPosition),
-                            typeof(AssociatedPositionsGroup),
                             typeof(Bargain),
                             typeof(BargainScanFile),
                             typeof(Bill),
@@ -29,7 +27,6 @@ namespace NuClear.ValidationRules.Replication
                             typeof(CategoryOrganizationUnit),
                             typeof(CostPerClickCategoryRestriction),
                             typeof(Deal),
-                            typeof(DeniedPosition),
                             typeof(Firm),
                             typeof(FirmAddress),
                             typeof(FirmAddressCategory),
@@ -49,7 +46,6 @@ namespace NuClear.ValidationRules.Replication
                             typeof(Project),
                             typeof(ReleaseInfo),
                             typeof(ReleaseWithdrawal),
-                            typeof(RulesetRule),
                             typeof(SalesModelCategoryRestriction),
                             typeof(Theme),
                             typeof(ThemeCategory),
@@ -62,7 +58,12 @@ namespace NuClear.ValidationRules.Replication
             {
                 return new[]
                     {
-                        typeof(Advertisement)
+                        typeof(Advertisement),
+                        typeof(Ruleset),
+                        typeof(Ruleset.AssociatedRule),
+                        typeof(Ruleset.DeniedRule),
+                        typeof(Ruleset.QuantitativeRule),
+                        typeof(Ruleset.RulesetProject)
                     };
             }
 

@@ -28,14 +28,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Advertisement>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
-            builder.Entity<AssociatedPosition>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.AssociatedPositionsGroupId });
-            builder.Entity<AssociatedPositionsGroup>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.PricePositionId });
             builder.Entity<Bargain>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
@@ -65,10 +57,6 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<Deal>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id);
-            builder.Entity<DeniedPosition>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasIndex(x => new { x.PriceId });
             builder.Entity<EntityName>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
@@ -96,8 +84,7 @@ namespace NuClear.ValidationRules.Storage
                    .HasIndex(x => new { x.LegalPersonId }, x => new { x.Id });
             builder.Entity<NomenclatureCategory>()
                    .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.Id)
-                   .HasPrimaryKey(x => x.PriceId);
+                   .HasPrimaryKey(x => x.Id);
             builder.Entity<Order>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
@@ -105,11 +92,13 @@ namespace NuClear.ValidationRules.Storage
                    .HasIndex(x => new { x.LegalPersonId, x.SignupDate }, x => new { x.Id })
                    .HasIndex(x => new { x.BargainId }, x => new { x.Id })
                    .HasIndex(x => new { x.BargainId, x.SignupDate }, x => new { x.Id })
-                   .HasIndex(x => new { x.BeginDistribution })
+                   .HasIndex(x => new { x.BeginDistribution, x.DestOrganizationUnitId }, x => new { x.FirmId })
                    .HasIndex(x => new { x.EndDistributionFact })
-                   .HasIndex(x => new { x.EndDistributionPlan });
+                   .HasIndex(x => new { x.EndDistributionPlan })
+                   .HasIndex(x => new { x.FirmId }, x => new { x.DestOrganizationUnitId, x.BeginDistribution });
             builder.Entity<OrderItem>()
-                   .HasSchemaName(FactsSchema);
+                   .HasSchemaName(FactsSchema)
+                   .HasIndex(x => new { x.OrderId }, x => new { x.OrderPositionId, x.PackagePositionId, x.ItemPositionId });
             builder.Entity<OrderPosition>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.Id)
@@ -156,11 +145,6 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.OrderPositionId)
                    .HasPrimaryKey(x => x.Start);
-            builder.Entity<RulesetRule>()
-                   .HasSchemaName(FactsSchema)
-                   .HasPrimaryKey(x => x.RuleType)
-                   .HasPrimaryKey(x => x.DependentPositionId)
-                   .HasPrimaryKey(x => x.PrincipalPositionId);
             builder.Entity<SalesModelCategoryRestriction>()
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.ProjectId)
@@ -182,6 +166,34 @@ namespace NuClear.ValidationRules.Storage
                    .HasSchemaName(FactsSchema)
                    .HasPrimaryKey(x => x.OrderId)
                    .HasPrimaryKey(x => x.PeriodStart);
+
+            builder.Entity<Ruleset>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.Id)
+                   .HasIndex(x => new { x.BeginDate, x.EndDate, x.IsDeleted });
+            builder.Entity<Ruleset.AssociatedRule>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.RulesetId)
+                   .HasPrimaryKey(x => x.PrincipalNomenclatureId)
+                   .HasPrimaryKey(x => x.AssociatedNomenclatureId)
+                   .HasIndex(x => new {x.RulesetId, x.AssociatedNomenclatureId}, x => new {x.PrincipalNomenclatureId, x.ConsideringBindingObject });
+            builder.Entity<Ruleset.DeniedRule>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.RulesetId)
+                   .HasPrimaryKey(x => x.NomenclatureId)
+                   .HasPrimaryKey(x => x.DeniedNomenclatureId)
+                   .HasIndex(x => new { x.RulesetId, x.NomenclatureId }, x => new { x.DeniedNomenclatureId, x.BindingObjectStrategy });
+            builder.Entity<Ruleset.QuantitativeRule>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.RulesetId)
+                   .HasPrimaryKey(x => x.NomenclatureCategoryCode)
+                   .HasIndex(x => new { x.RulesetId, x.NomenclatureCategoryCode }, x => new { x.Min, x.Max });
+            builder.Entity<Ruleset.RulesetProject>()
+                   .HasSchemaName(FactsSchema)
+                   .HasPrimaryKey(x => x.RulesetId)
+                   .HasPrimaryKey(x => x.ProjectId)
+                   .HasIndex(x => new { x.ProjectId, x.RulesetId });
+
             return builder;
         }
     }

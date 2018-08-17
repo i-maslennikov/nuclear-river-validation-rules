@@ -21,7 +21,7 @@ namespace ValidationRules.Replication.Comparison.Tests
         private readonly RiverToErmResultAdapter _riverService = new RiverToErmResultAdapter("River");
         private readonly ErmToRiverResultAdapter _ermService = new ErmToRiverResultAdapter("Erm");
 
-        public IReadOnlyCollection<TestCaseData> Releases
+        public static IReadOnlyCollection<TestCaseData> Releases
         {
             get
             {

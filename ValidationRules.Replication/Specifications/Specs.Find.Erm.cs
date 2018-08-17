@@ -4,6 +4,7 @@ using System.Linq;
 using NuClear.Storage.API.Specifications;
 
 using Erm = NuClear.ValidationRules.Storage.Model.Erm;
+using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication.Specifications
 {

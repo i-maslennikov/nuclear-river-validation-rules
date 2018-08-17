@@ -7,8 +7,9 @@ using NuClear.Metamodeling.Elements.Concrete.Hierarchy;
 using NuClear.Metamodeling.Provider.Sources;
 using NuClear.OperationsProcessing.API.Metadata;
 using NuClear.ValidationRules.OperationsProcessing.AggregatesFlow;
-using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
-using NuClear.ValidationRules.OperationsProcessing.FactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.AmsFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.ErmFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.RulesetFactsFlow;
 using NuClear.ValidationRules.OperationsProcessing.MessagesFlow;
 using NuClear.ValidationRules.OperationsProcessing.Transports;
 
@@ -19,17 +20,23 @@ namespace NuClear.ValidationRules.OperationsProcessing
         private static readonly HierarchyMetadata MetadataRoot =
             PerformedOperations.Flows
                                .Primary(
-                                        MessageFlowMetadata.Config.For<AmsFactsFlow.AmsFactsFlow>()
+                                        MessageFlowMetadata.Config.For<AmsFactsFlow>()
                                                            .Receiver<BatchingKafkaReceiverTelemetryDecorator<AmsFactsFlowTelemetryPublisher>>()
                                                            .Accumulator<AmsFactsFlowAccumulator>()
                                                            .Handler<AmsFactsFlowHandler>()
-                                                           .To.Primary().Flow<AmsFactsFlow.AmsFactsFlow>().Connect(),
+                                                           .To.Primary().Flow<AmsFactsFlow>().Connect(),
 
-                                        MessageFlowMetadata.Config.For<FactsFlow.FactsFlow>()
-                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<FactsFlowTelemetryPublisher>>()
-                                                           .Accumulator<FactsFlowAccumulator>()
-                                                           .Handler<FactsFlowHandler>()
-                                                           .To.Primary().Flow<FactsFlow.FactsFlow>().Connect(),
+                                        MessageFlowMetadata.Config.For<RulesetFactsFlow>()
+                                                           .Receiver<BatchingKafkaReceiverTelemetryDecorator<RulesetFactsFlowTelemetryPublisher>>()
+                                                           .Accumulator<RulesetFactsFlowAccumulator>()
+                                                           .Handler<RulesetFactsFlowHandler>()
+                                                           .To.Primary().Flow<RulesetFactsFlow>().Connect(),
+
+                                        MessageFlowMetadata.Config.For<ErmFactsFlow>()
+                                                           .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<ErmFactsFlowTelemetryPublisher>>()
+                                                           .Accumulator<ErmFactsFlowAccumulator>()
+                                                           .Handler<ErmFactsFlowHandler>()
+                                                           .To.Primary().Flow<ErmFactsFlow>().Connect(),
 
                                         MessageFlowMetadata.Config.For<AggregatesFlow.AggregatesFlow>()
                                                            .Receiver<BatchingServiceBusMessageReceiverTelemetryDecorator<AggregatesFlowTelemetryPublisher>>()

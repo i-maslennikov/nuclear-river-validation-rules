@@ -101,20 +101,6 @@ namespace NuClear.ValidationRules.Storage
 
         private static FluentMappingBuilder RegisterPriceAggregates(this FluentMappingBuilder builder)
         {
-            builder.Entity<PriceAggregates::Price>()
-                  .HasSchemaName(PriceAggregatesSchema)
-                  .HasPrimaryKey(x => x.Id);
-
-            builder.Entity<PriceAggregates::Price.PricePeriod>()
-                   .HasSchemaName(PriceAggregatesSchema);
-
-            builder.Entity<PriceAggregates::Price.AssociatedPositionGroupOvercount>()
-                  .HasSchemaName(PriceAggregatesSchema);
-
-            builder.Entity<PriceAggregates::Price.AdvertisementAmountRestriction>()
-                   .HasSchemaName(PriceAggregatesSchema)
-                   .HasIndex(x => new { x.PriceId });
-
             builder.Entity<PriceAggregates::Firm>()
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Id);
@@ -168,6 +154,14 @@ namespace NuClear.ValidationRules.Storage
             builder.Entity<PriceAggregates::Period>()
                   .HasSchemaName(PriceAggregatesSchema)
                   .HasPrimaryKey(x => x.Start);
+
+            builder.Entity<PriceAggregates::Ruleset>()
+                   .HasSchemaName(PriceAggregatesSchema)
+                   .HasPrimaryKey(x => x.Id);
+
+            builder.Entity<PriceAggregates::Ruleset.AdvertisementAmountRestriction>()
+                   .HasSchemaName(PriceAggregatesSchema)
+                   .HasPrimaryKey(x => new { x.RulesetId, x.ProjectId, x.CategoryCode });
 
             return builder;
         }

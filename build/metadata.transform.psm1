@@ -74,22 +74,54 @@ function Get-DBHostMetadata($Context){
 	return @{ 'DBHost' = $dbHost }
 }
 
-function Get-AmsFactsTopicsMetadata($Context){
+function Get-AmsFactsTopicMetadata($Context){
 	switch($Context.EnvType){
 		'Test' {
 			return @{
-				'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
+				'AmsFactsTopic' = 'ams_okapi_prod.am.validity'
 			}
 		 }
 		'Business' {
-			return @{ 'AmsFactsTopics' = "ams_okapi_business$($Context['Index']).am.validity" }
+			return @{ 'AmsFactsTopic' = "ams_okapi_business$($Context['Index']).am.validity" }
 		}
 		'Edu' {
-			return @{ 'AmsFactsTopics' = "ams_okapi_edu$($Context['Index']).am.validity" }
+			return @{ 'AmsFactsTopic' = "ams_okapi_edu$($Context['Index']).am.validity" }
 		}
 		 'Production' {
 			 return @{
-				 'AmsFactsTopics' = 'ams_okapi_prod.am.validity'
+				 'AmsFactsTopic' = 'ams_okapi_prod.am.validity'
+			 }
+		}
+		default {
+			return @{}
+		}
+	}
+}
+
+function Get-RulesetsFactsTopicsMetadata($Context){
+	switch($Context.EnvType){
+		'Test' {
+			if (($Context.RulesetsFactsTopic -ne $null) -And ($Context.RulesetsFactsTopic -ne "")){
+				return @{
+					'RulesetsFactsTopic' = $Context.RulesetsFactsTopic
+				}
+			}
+			return @{
+				'RulesetsFactsTopic' = 'casino_staging_flowRulesets_compacted'
+			}
+		 }
+		'Business' {
+			if ($Context['Index'] -eq '1'){
+				return @{'RulesetsFactsTopic' = 'erm_business01_flowRulesets'}
+			}
+			return @{ 'RulesetsFactsTopic' = 'casino_staging_flowRulesets_compacted' }
+		}
+		'Edu' {
+			return @{ 'RulesetsFactsTopic' = 'casino_staging_flowRulesets_compacted' }
+		}
+		 'Production' {
+			 return @{
+				 'RulesetsFactsTopic' = 'casino_staging_flowRulesets_compacted'
 			 }
 		}
 		default {
@@ -214,7 +246,8 @@ function Get-RegexMetadata($Context){
 	$keyValuePairs = @{}
 	$keyValuePairs += Get-DBHostMetadata $Context
 	$keyValuePairs += Get-ValidationUrlMetadata $Context
-	$keyValuePairs += Get-AmsFactsTopicsMetadata $Context
+	$keyValuePairs += Get-AmsFactsTopicMetadata $Context
+	$keyValuePairs += Get-RulesetsFactsTopicsMetadata $Context
 
 	foreach($keyValuePair in $keyValuePairs.GetEnumerator()){
 		$regex["{$($keyValuePair.Key)}"] = $keyValuePair.Value

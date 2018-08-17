@@ -162,6 +162,11 @@
   <ItemGroup>
     <Compile Include="Accessors\AccountDetailAccessor.cs" />
     <Compile Include="Accessors\AdvertisementAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetAssociatedRuleAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetDeniedRuleAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetProjectAccessor.cs" />
+    <Compile Include="Accessors\Rulesets\RulesetQuantitativeRuleAccessor.cs" />
     <Compile Include="Accessors\SystemStatusAccessor.cs" />
     <Compile Include="Accessors\NomenclatureCategoryAccessor.cs" />
     <Compile Include="Accessors\OrderItemAccessor.cs" />
@@ -187,8 +192,12 @@
     <Compile Include="AdvertisementRules\Validation\OptionalAdvertisementMustPassReview.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveOptionalAdvertisement.cs" />
     <Compile Include="ConsistencyRules\Validation\AtLeastOneLinkedPartnerFirmAddressShouldBeValid.cs" />
+    <Compile Include="Dto\RulesetDto.cs" />
+    <Compile Include="PriceRules\Aggregates\RulesetAggregateRootActor.cs" />
     <Compile Include="FirmRules\Validation\PartnerAdvertisementMustNotCauseProblemsToTheAdvertiser.cs" />
     <Compile Include="PriceRules\Validation\PoiAmountForEntranceShouldMeetMaximumRestrictions.cs" />
+    <Compile Include="ReplaceDataObjectsActor.cs" />
+    <Compile Include="Specifications\Specs.Find.Facts.cs" />
     <Compile Include="SystemRules\Validation\AmsMessagesShouldBeNew.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustBeCreated.cs" />
     <Compile Include="AdvertisementRules\Validation\OrderPositionAdvertisementMustHaveAdvertisement.cs" />
@@ -288,22 +297,15 @@
     <Compile Include="ConsistencyRules\Validation\OrderBeginDistrubutionShouldBeFirstDayOfMonth.cs" />
     <Compile Include="FirmRules\Validation\LinkedFirmShouldBeValid.cs" />
     <Compile Include="Accessors\PriceAccessor.cs" />
-    <Compile Include="Accessors\RulesetRuleAccessor.cs" />
-    <Compile Include="Accessors\DeniedPositionAccessor.cs" />
-    <Compile Include="Accessors\AssociatedPositionsGroupAccessor.cs" />
-    <Compile Include="Accessors\AssociatedPositionAccessor.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementCountPerCategoryShouldBeLimited.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementCountPerThemeShouldBeLimited.cs" />
     <Compile Include="PriceRules\Validation\FirmPositionMustNotHaveDeniedPositions.cs" />
-    <Compile Include="PriceRules\Validation\AssociatedPositionsGroupCount.cs" />
-    <Compile Include="PriceRules\Validation\MinimalAdvertisementRestrictionShouldBeSpecified.cs" />
     <Compile Include="PriceRules\Validation\AdvertisementAmountShouldMeetMinimumRestrictions.cs" />
     <Compile Include="AggregateActor.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionCorrespontToInactivePosition.cs" />
     <Compile Include="PriceRules\Validation\OrderPositionMayCorrespontToActualPrice.cs" />
     <Compile Include="PriceRules\Validation\OrderMustHaveActualPrice.cs" />
     <Compile Include="PriceRules\Aggregates\PeriodAggregateRootActor.cs" />
-    <Compile Include="PriceRules\Aggregates\PriceAggregateRootActor.cs" />
     <Compile Include="PriceRules\Aggregates\OrderAggregateRootActor.cs" />
     <Compile Include="ValidationResultExtensions.cs" />
     <Compile Include="Specifications\Specs.Join.Aggs.cs" />

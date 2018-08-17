@@ -30,8 +30,6 @@ namespace NuClear.ValidationRules.Replication.Accessors
                 Id = x.Id,
                 PriceId = x.PriceId,
                 PositionId = x.PositionId,
-                MaxAdvertisementAmount = x.MaxAdvertisementAmount,
-                MinAdvertisementAmount = x.MinAdvertisementAmount,
                 IsActiveNotDeleted = x.IsActive && !x.IsDeleted
             });
 
@@ -52,21 +50,15 @@ namespace NuClear.ValidationRules.Replication.Accessors
 
         public IReadOnlyCollection<IEvent> HandleRelates(IReadOnlyCollection<PricePosition> dataObjects)
         {
-            var pricePositionIds = dataObjects.Select(x => x.Id).ToList();
+            var pricePositionIds = dataObjects.Select(x => x.Id)
+                                              .ToList();
 
             var orderIds =
                 from op in _query.For<OrderPosition>().Where(x => pricePositionIds.Contains(x.PricePositionId))
                 join order in _query.For<Order>() on op.OrderId equals order.Id
                 select order.Id;
 
-            var firmIds =
-                from op in _query.For<OrderPosition>().Where(x => pricePositionIds.Contains(x.PricePositionId))
-                join order in _query.For<Order>() on op.OrderId equals order.Id
-                select order.FirmId;
-
-            var priceIds = dataObjects.Select(x => x.PriceId);
-
-            return new EventCollectionHelper<PricePosition> { { typeof(Order), orderIds }, { typeof(Price), priceIds }, { typeof(Firm), firmIds }, };
+            return new EventCollectionHelper<PricePosition> { { typeof(Order), orderIds } };
         }
     }
 }

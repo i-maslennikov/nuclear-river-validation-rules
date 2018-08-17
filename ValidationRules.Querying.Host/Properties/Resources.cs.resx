@@ -180,9 +180,6 @@
   <data name="LinkedFirmShouldBeValid_ClosedForever" xml:space="preserve">
     <value>Firma {0} je skryta navždy</value>
   </data>
-  <data name="AssociatedPositionsGroupCount" xml:space="preserve">
-    <value>Ceníková položka {0} obsahuje více než jednu skupinu průvodních položek - nepodporováno systémem.</value>
-  </data>
   <data name="LegalPerson" xml:space="preserve">
     <value>Pr. osoba objednatele</value>
   </data>
@@ -281,9 +278,6 @@
   </data>
   <data name="OrderMustUseCategoriesOnlyAvailableInProject" xml:space="preserve">
     <value>V položce {0} jsou rubriky, které nejsou vázány na oddělení organizace cílového města objednávky: </value>
-  </data>
-  <data name="MinimalAdvertisementRestrictionShouldBeSpecified" xml:space="preserve">
-    <value>V ceníkové položce {0} je třeba uvést minimální počet reklam k vydání.</value>
   </data>
   <data name="LegalPersonProfileBargainShouldNotBeExpired" xml:space="preserve">
     <value>V profilu {0} pr. osoby klienta je uvedena smlouva, jejíž platnost končí před datem podepsání objednávky.</value>

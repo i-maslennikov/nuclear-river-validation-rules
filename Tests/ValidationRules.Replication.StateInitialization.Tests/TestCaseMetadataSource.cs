@@ -11,29 +11,39 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
 {
     public sealed partial class TestCaseMetadataSource : MetadataSourceBase<TestCaseMetadataIdentity>
     {
-        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata
-            => Tests().ToDictionary(x => x.Identity.Id, x => (IMetadataElement)x);
+        public TestCaseMetadataSource()
+        {
+            Tests = DiscoverTests();
+            Metadata = Tests.OfType<IMetadataElement>()
+                            .ToDictionary(x => x.Identity.Id);
+        }
 
-        private static IEnumerable<TestCaseMetadataElement> Tests()
+        public IReadOnlyCollection<TestCaseMetadataElement> Tests { get; }
+        public override IReadOnlyDictionary<Uri, IMetadataElement> Metadata { get; }
+
+        private static IReadOnlyCollection<TestCaseMetadataElement> DiscoverTests()
         {
             var acts = new[] { ErmToFacts, FactsToAggregates, AggregatesToMessages };
 
-            var tests = from arrangeMetadataElement in ScanForDatasets()
+            var discoveredDataTests = ScanForDatasets();
+
+            var tests = from arrangeMetadataElement in discoveredDataTests
                         from actMetadataElement in acts
                         where actMetadataElement.Requirements.All(requirement => arrangeMetadataElement.Contexts.Contains(requirement))
                               && arrangeMetadataElement.Contexts.Contains(actMetadataElement.Target)
                         select new TestCaseMetadataElement(arrangeMetadataElement, actMetadataElement, AssertOnlyMentionedTypes);
 
-            return tests.OrderBy(x => x.Identity.Id.ToString());
+            return tests.OrderBy(x => x.Identity.Id.ToString())
+                        .ToList();
         }
 
         private static IEnumerable<ArrangeMetadataElement> ScanForDatasets()
         {
             return typeof(TestCaseMetadataSource)
-                .GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(property => property.PropertyType == typeof(ArrangeMetadataElement))
-                .Select(property => property.GetValue(null))
-                .Cast<ArrangeMetadataElement>();
+                   .GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
+                   .Where(property => property.PropertyType == typeof(ArrangeMetadataElement))
+                   .Select(property => property.GetValue(null))
+                   .Cast<ArrangeMetadataElement>();
         }
 
         private static readonly ActMetadataElement ErmToFacts =

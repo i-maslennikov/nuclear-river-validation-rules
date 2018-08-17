@@ -11,14 +11,12 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
             = new Dictionary<MessageTypeCode, int>
                     {
                             { MessageTypeCode.AdvertisementAmountShouldMeetMaximumRestrictions, 26 },
-                            { MessageTypeCode.MinimalAdvertisementRestrictionShouldBeSpecified, 26 },
                             { MessageTypeCode.OrderMustHaveActualPrice, 15 },
                             { MessageTypeCode.OrderPositionCorrespontToInactivePosition, 15 },
                             { MessageTypeCode.OrderPositionMayCorrespontToActualPrice, 15 },
                             { MessageTypeCode.OrderPositionMustCorrespontToActualPrice, 15 },
                             { MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictions, 26 },
                             { MessageTypeCode.AdvertisementAmountShouldMeetMinimumRestrictionsMass, 26 },
-                            { MessageTypeCode.AssociatedPositionsGroupCount, 6 },
                             { MessageTypeCode.FirmPositionMustNotHaveDeniedPositions, 6 },
                             { MessageTypeCode.FirmAssociatedPositionMustHavePrincipal, 6 },
                             { MessageTypeCode.FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject, 6 },
@@ -79,7 +77,10 @@ namespace ValidationRules.Replication.Comparison.Tests.RiverService
         public static int ToErmRuleCode(this int riverMessageTypeCode)
             => RiverToErmRuleCodeMapping[(MessageTypeCode)riverMessageTypeCode];
 
-        public static bool HasRiverRule(this int ermMessageTypeCode)
-            => RiverToErmRuleCodeMapping.Any(x => x.Value == ermMessageTypeCode);
+        public static int CoerceFromErmRuleCode(this int ermMessageTypeCode)
+        {
+            const int RiverRuleCodesOffsetUsedByErmService = 1000;
+            return ermMessageTypeCode - RiverRuleCodesOffsetUsedByErmService;
+        }
     }
 }

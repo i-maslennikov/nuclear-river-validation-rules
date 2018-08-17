@@ -94,6 +94,9 @@
     <Reference Include="2GIS.NuClear.Replication.OperationsProcessing, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NuClear.River.Replication.7.0.0\lib\net461\2GIS.NuClear.Replication.OperationsProcessing.dll</HintPath>
     </Reference>
+    <Reference Include="2GIS.NuClear.River.Hosting.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuClear.River.Hosting.Common.7.0.0\lib\net461\2GIS.NuClear.River.Hosting.Common.dll</HintPath>
+    </Reference>
     <Reference Include="2GIS.NuClear.Settings, Version=0.0.0.0, Culture=neutral, PublicKeyToken=5149c0be8b89ed8f, processorArchitecture=MSIL">
       <HintPath>..\packages\2GIS.NuClear.Settings.1.2.0\lib\net451\2GIS.NuClear.Settings.dll</HintPath>
       <Private>True</Private>
@@ -158,6 +161,9 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Optional, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Optional.4.0.0\lib\net45\Optional.dll</HintPath>
+    </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.669\lib\net35\protobuf-net.dll</HintPath>
       <Private>True</Private>
@@ -178,11 +184,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AmsFactsFlow\AmsFactsFlow.cs" />
-    <Compile Include="AmsFactsFlow\AmsFactsFlowAccumulator.cs" />
-    <Compile Include="AmsFactsFlow\AmsFactsFlowHandler.cs" />
-    <Compile Include="AmsFactsFlow\AmsFactsFlowTelemetryPublisher.cs" />
+    <Compile Include="Facts\AmsFactsFlow\AdvertisementDtoDeserializer.cs" />
+    <Compile Include="Facts\AmsFactsFlow\AmsFactsCommandFactory.cs" />
+    <Compile Include="Facts\AmsFactsFlow\AmsFactsFlow.cs" />
+    <Compile Include="Facts\AmsFactsFlow\AmsFactsFlowAccumulator.cs" />
+    <Compile Include="Facts\AmsFactsFlow\AmsFactsFlowHandler.cs" />
+    <Compile Include="Facts\AmsFactsFlow\AmsFactsFlowTelemetryPublisher.cs" />
+    <Compile Include="Facts\FactsEventEqualityComparer.cs" />
     <Compile Include="ICommandFactory.cs" />
+    <Compile Include="IDeserializer.cs" />
+    <Compile Include="Facts\RulesetFactsFlow\RulesetDtoDeserializer.cs" />
+    <Compile Include="Facts\RulesetFactsFlow\RulesetFactsCommandFactory.cs" />
+    <Compile Include="Facts\RulesetFactsFlow\RulesetFactsFlowAccumulator.cs" />
     <Compile Include="MessagesFlow\MessagesFlow.cs" />
     <Compile Include="MessagesFlow\MessagesFlowAccumulator.cs" />
     <Compile Include="Contexts\AggregateSubDomain.cs" />
@@ -195,16 +208,19 @@
     <Compile Include="MessagesFlow\MessagesFlowHandler.cs" />
     <Compile Include="AggregatesFlow\AggregatesFlowHandler.cs" />
     <Compile Include="AggregatesFlow\AggregatesFlow.cs" />
-    <Compile Include="FactsFlow\FactsFlow.cs" />
+    <Compile Include="Facts\ErmFactsFlow\ErmFactsFlow.cs" />
     <Compile Include="MessageFlowMetadataBuilderExtensions.cs" />
     <Compile Include="FlowMetadataSource.cs" />
-    <Compile Include="FactsFlow\FactsFlowAccumulator.cs" />
-    <Compile Include="FactsFlow\FactsFlowHandler.cs" />
+    <Compile Include="Facts\ErmFactsFlow\ErmFactsFlowAccumulator.cs" />
+    <Compile Include="Facts\ErmFactsFlow\ErmFactsFlowHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AggregatesFlow\AggregatesFlowTelemetryPublisher.cs" />
-    <Compile Include="FactsFlow\FactsFlowTelemetryPublisher.cs" />
+    <Compile Include="Facts\ErmFactsFlow\ErmFactsFlowTelemetryPublisher.cs" />
     <Compile Include="MessagesFlow\MessagesFlowTelemetryPublisher.cs" />
     <Compile Include="IFlowTelemetryPublisher.cs" />
+    <Compile Include="Facts\RulesetFactsFlow\RulesetFactsFlow.cs" />
+    <Compile Include="Facts\RulesetFactsFlow\RulesetFactsFlowHandler.cs" />
+    <Compile Include="Facts\RulesetFactsFlow\RulesetFactsFlowTelemetryPublisher.cs" />
     <Compile Include="Transports\BatchingKafkaReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\BatchingServiceBusMessageReceiverTelemetryDecorator.cs" />
     <Compile Include="Transports\XmlEventSerializer.cs" />
@@ -217,6 +233,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ValidationRules.Hosting.Common\ValidationRules.Hosting.Common.csproj">
+      <Project>{876CF585-D099-4C5A-949E-E76DA08764D8}</Project>
+      <Name>ValidationRules.Hosting.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ValidationRules.Replication\ValidationRules.Replication.csproj">
       <Project>{855B881B-8AF1-4E7D-9CB4-9BD8232AAFBC}</Project>
       <Name>ValidationRules.Replication</Name>

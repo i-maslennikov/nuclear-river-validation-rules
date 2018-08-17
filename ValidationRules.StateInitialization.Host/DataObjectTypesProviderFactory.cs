@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
+using NuClear.Replication.Core;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.StateInitialization.Core.Commands;
 using NuClear.StateInitialization.Core.DataObjects;
 using NuClear.StateInitialization.Core.Factories;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.StateInitialization.Host.Kafka;
+using NuClear.ValidationRules.Storage.Connections;
 
 using Facts = NuClear.ValidationRules.Storage.Model.Facts;
 
@@ -25,12 +29,16 @@ namespace NuClear.ValidationRules.StateInitialization.Host
 {
     public sealed class DataObjectTypesProviderFactory : IDataObjectTypesProviderFactory
     {
-        public static readonly Type[] FactTypes =
+        public static IReadOnlyCollection<Type> AllSourcesFactTypes =>
+            DataObjectTypesProviderFactory.ErmFactTypes
+                                          .Union(DataObjectTypesProviderFactory.AmsFactTypes)
+                                          .Union(DataObjectTypesProviderFactory.RulesetFactTypes)
+                                          .ToList();
+
+        public static readonly Type[] ErmFactTypes =
             {
                 typeof(Facts::Account),
                 typeof(Facts::AccountDetail),
-                typeof(Facts::AssociatedPosition),
-                typeof(Facts::AssociatedPositionsGroup),
                 typeof(Facts::Bargain),
                 typeof(Facts::BargainScanFile),
                 typeof(Facts::Bill),
@@ -40,7 +48,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(Facts::CategoryOrganizationUnit),
                 typeof(Facts::CostPerClickCategoryRestriction),
                 typeof(Facts::Deal),
-                typeof(Facts::DeniedPosition),
                 typeof(Facts::EntityName),
                 typeof(Facts::Firm),
                 typeof(Facts::FirmAddress),
@@ -61,7 +68,6 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(Facts::Project),
                 typeof(Facts::ReleaseInfo),
                 typeof(Facts::ReleaseWithdrawal),
-                typeof(Facts::RulesetRule),
                 typeof(Facts::SalesModelCategoryRestriction),
                 typeof(Facts::SystemStatus),
                 typeof(Facts::Theme),
@@ -73,7 +79,16 @@ namespace NuClear.ValidationRules.StateInitialization.Host
         public static readonly Type[] AmsFactTypes =
             {
                 typeof(Facts::Advertisement),
-                typeof(Facts::EntityName),
+                typeof(Facts::EntityName)
+            };
+
+        public static readonly Type[] RulesetFactTypes =
+            {
+                typeof(Facts::Ruleset),
+                typeof(Facts::Ruleset.AssociatedRule),
+                typeof(Facts::Ruleset.DeniedRule),
+                typeof(Facts::Ruleset.QuantitativeRule),
+                typeof(Facts::Ruleset.RulesetProject)
             };
 
         public static readonly Type[] AggregateTypes =
@@ -91,10 +106,8 @@ namespace NuClear.ValidationRules.StateInitialization.Host
                 typeof(PriceAggregates::Order.EntranceControlledPosition),
                 typeof(PriceAggregates::Order.ActualPrice),
                 typeof(PriceAggregates::Period),
-                typeof(PriceAggregates::Price),
-                typeof(PriceAggregates::Price.PricePeriod),
-                typeof(PriceAggregates::Price.AdvertisementAmountRestriction),
-                typeof(PriceAggregates::Price.AssociatedPositionGroupOvercount),
+                typeof(PriceAggregates::Ruleset),
+                typeof(PriceAggregates::Ruleset.AdvertisementAmountRestriction),
 
                 typeof(AccountAggregates::Order),
                 typeof(AccountAggregates::Order.DebtPermission),
@@ -174,10 +187,14 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             {
                 if (command.SourceStorageDescriptor.ConnectionStringIdentity is AmsConnectionStringIdentity)
                 {
-                    return new KafkaReplicationActor.DataObjectTypesProvider(AmsFactTypes);
+                    return new DataObjectTypesProvider(AmsFactTypes);
+                }
+                else if (command.SourceStorageDescriptor.ConnectionStringIdentity is RulesetConnectionStringIdentity)
+                {
+                    return new DataObjectTypesProvider(RulesetFactTypes);
                 }
 
-                return new CommandRegardlessDataObjectTypesProvider(FactTypes);
+                return new CommandRegardlessDataObjectTypesProvider(ErmFactTypes);
             }
 
             if (command.TargetStorageDescriptor.ConnectionStringIdentity is AggregatesConnectionStringIdentity)
@@ -191,6 +208,19 @@ namespace NuClear.ValidationRules.StateInitialization.Host
             }
 
             throw new ArgumentException($"Instance of type IDataObjectTypesProvider cannot be created for connection string name {command.TargetStorageDescriptor.MappingSchema}");
+        }
+
+        // CommandRegardlessDataObjectTypesProvider - он internal в StateInitiallization.Core, пришлось запилить вот это
+        internal sealed class DataObjectTypesProvider : IDataObjectTypesProvider
+        {
+            public IReadOnlyCollection<Type> DataObjectTypes { get; }
+
+            public DataObjectTypesProvider(IReadOnlyCollection<Type> dataObjectTypes)
+            {
+                DataObjectTypes = dataObjectTypes;
+            }
+
+            public IReadOnlyCollection<Type> Get<TCommand>() where TCommand : ICommand => throw new NotImplementedException();
         }
     }
 }

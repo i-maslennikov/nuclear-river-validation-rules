@@ -7,7 +7,7 @@ using NuClear.Security.API.Auth;
 using NuClear.Security.API.Context;
 using NuClear.Storage.API.Writings;
 using NuClear.Tracing.API;
-using NuClear.ValidationRules.OperationsProcessing.AmsFactsFlow;
+using NuClear.ValidationRules.OperationsProcessing.Facts.AmsFactsFlow;
 using NuClear.ValidationRules.Replication.Events;
 
 using Quartz;

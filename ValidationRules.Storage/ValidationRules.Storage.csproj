@@ -159,14 +159,15 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityTypeIds.cs" />
+    <Compile Include="Identitites\EntityTypes\EntityTypeIds.cs" />
     <Compile Include="FieldComparer\DateTimeComparer.cs" />
     <Compile Include="FieldComparer\XDocumentComparer.cs" />
-    <Compile Include="Identitites\Connections\AmsConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\ErmConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\AggregatesConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\FactsConnectionStringIdentity.cs" />
-    <Compile Include="Identitites\Connections\MessagesConnectionStringIdentity.cs" />
+    <Compile Include="Connections\AmsConnectionStringIdentity.cs" />
+    <Compile Include="Connections\ErmConnectionStringIdentity.cs" />
+    <Compile Include="Connections\AggregatesConnectionStringIdentity.cs" />
+    <Compile Include="Connections\FactsConnectionStringIdentity.cs" />
+    <Compile Include="Connections\MessagesConnectionStringIdentity.cs" />
+    <Compile Include="Connections\RulesetConnectionStringIdentity.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAccount.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAccountDetail.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisement.cs" />
@@ -174,8 +175,6 @@
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisementElementStatus.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisementElementTemplate.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeAdvertisementTemplate.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeAssociatedPosition.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeAssociatedPositionsGroup.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeBargain.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeBargainFile.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeBill.cs" />
@@ -185,12 +184,12 @@
     <Compile Include="Identitites\EntityTypes\EntityTypeCategoryFirmAddress.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeCategoryOrganizationUnit.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeDeal.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeDeniedPosition.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeFirm.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeFirmAddress.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeFirmContact.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeLegalPerson.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeLegalPersonProfile.cs" />
+    <Compile Include="Identitites\EntityTypes\EntityTypeNomenclatureCategory.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrder.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrderFile.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeOrderPosition.cs" />
@@ -200,7 +199,6 @@
     <Compile Include="Identitites\EntityTypes\EntityTypePricePosition.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeProject.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeReleaseInfo.cs" />
-    <Compile Include="Identitites\EntityTypes\EntityTypeRuleset.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeTheme.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeThemeCategory.cs" />
     <Compile Include="Identitites\EntityTypes\EntityTypeThemeOrganizationUnit.cs" />
@@ -209,6 +207,7 @@
     <Compile Include="Model\AccountRules\Aggregates\Account.cs" />
     <Compile Include="Model\AccountRules\Aggregates\Order.cs" />
     <Compile Include="Model\Erm\AccountDetail.cs" />
+    <Compile Include="Model\Erm\NomenclatureCategory.cs" />
     <Compile Include="Model\Facts\AccountDetail.cs" />
     <Compile Include="Model\Facts\Advertisement.cs" />
     <Compile Include="Model\Facts\EntityName.cs" />
@@ -225,6 +224,7 @@
     <Compile Include="Model\Facts\FirmAddress.cs" />
     <Compile Include="Model\Facts\Position.cs" />
     <Compile Include="Model\Facts\PricePosition.cs" />
+    <Compile Include="Model\Facts\Ruleset.cs" />
     <Compile Include="Model\Facts\SystemStatus.cs" />
     <Compile Include="Model\Facts\UnlimitedOrder.cs" />
     <Compile Include="Model\ConsistencyRules\Aggregates\Order.cs" />
@@ -272,13 +272,13 @@
     <Compile Include="Model\Messages\RuleSeverityLevel.cs" />
     <Compile Include="Model\Messages\CheckMode.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Firm.cs" />
+    <Compile Include="Model\PriceRules\Aggregates\Ruleset.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Order.cs" />
     <Compile Include="Model\ProjectRules\Aggregates\Project.cs" />
     <Compile Include="Model\Facts\CategoryOrganizationUnit.cs" />
     <Compile Include="Model\Facts\CostPerClickCategoryRestriction.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Order.cs" />
     <Compile Include="Model\PriceRules\Aggregates\Period.cs" />
-    <Compile Include="Model\PriceRules\Aggregates\Price.cs" />
     <Compile Include="Model\Erm\AssociatedPosition.cs" />
     <Compile Include="Model\Erm\AssociatedPositionsGroup.cs" />
     <Compile Include="Model\Erm\Category.cs" />
@@ -290,13 +290,7 @@
     <Compile Include="Model\Erm\Price.cs" />
     <Compile Include="Model\Erm\PricePosition.cs" />
     <Compile Include="Model\Erm\Project.cs" />
-    <Compile Include="Model\Erm\Ruleset.cs" />
-    <Compile Include="Model\Erm\RulesetRule.cs" />
-    <Compile Include="Model\Facts\AssociatedPosition.cs" />
-    <Compile Include="Model\Facts\AssociatedPositionsGroup.cs" />
-    <Compile Include="Model\Facts\DeniedPosition.cs" />
     <Compile Include="Model\Facts\Price.cs" />
-    <Compile Include="Model\Facts\RulesetRule.cs" />
     <Compile Include="Model\Messages\ValidationResult.cs" />
     <Compile Include="Model\Facts\OrderPositionCostPerClick.cs" />
     <Compile Include="Model\Facts\ReleaseInfo.cs" />

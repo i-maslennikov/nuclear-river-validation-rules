@@ -180,9 +180,6 @@
   <data name="LinkedFirmShouldBeValid_ClosedForever" xml:space="preserve">
     <value>Empresa {0} oculta permanentemente</value>
   </data>
-  <data name="AssociatedPositionsGroupCount" xml:space="preserve">
-    <value>En la Posición de la lista de precios #{0} hay más de un grupo de posiciones relacionadas, lo cual no es compatible con el sistema.</value>
-  </data>
   <data name="LegalPerson" xml:space="preserve">
     <value>Persona jurídica del contratante</value>
   </data>
@@ -281,9 +278,6 @@
   </data>
   <data name="OrderMustUseCategoriesOnlyAvailableInProject" xml:space="preserve">
     <value>En la posición {0} están utilizadas las categorías que no están enlazadas con ninguna sucursal de la ciudad de destino de la orden: </value>
-  </data>
-  <data name="MinimalAdvertisementRestrictionShouldBeSpecified" xml:space="preserve">
-    <value>En la posición de la lista de precios {0} se deben especificar la cantidad mínima de publicidad en un lanzamiento.</value>
   </data>
   <data name="LegalPersonProfileBargainShouldNotBeExpired" xml:space="preserve">
     <value>En el perfil {0} de la persona jurídica del cliente está especificado un contrato con la fecha de vigencia anterior a la fecha de la firma de la orden.</value>

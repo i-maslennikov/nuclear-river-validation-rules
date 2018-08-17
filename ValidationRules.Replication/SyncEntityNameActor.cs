@@ -14,6 +14,7 @@ using NuClear.ValidationRules.Replication.Commands;
 using NuClear.ValidationRules.Replication.Dto;
 using NuClear.ValidationRules.Replication.Specifications;
 using NuClear.ValidationRules.Storage;
+using NuClear.ValidationRules.Storage.Identitites.EntityTypes;
 using NuClear.ValidationRules.Storage.Model.Facts;
 
 namespace NuClear.ValidationRules.Replication

@@ -289,7 +289,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="quartz.ams_config">
+    <None Include="quartz.kafka_config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="quartz.config">
@@ -322,7 +322,7 @@
     <Compile Include="DI\ReplicationHostAssembly.cs" />
     <Compile Include="DI\ReplicationRoot.cs" />
     <Compile Include="Jobs\HeartbeatJob.cs" />
-    <Compile Include="Jobs\AmsFactsShedulerManager.cs" />
+    <Compile Include="Jobs\KafkaFactsImportShedulerManager.cs" />
     <Compile Include="Security\TracerContextUserContextScopeChangesObserver.cs" />
     <Compile Include="Security\UserAuthorizationService.cs" />
     <Compile Include="Factories\Messaging\Processor\FinalProcessorResolveStrategy.cs" />

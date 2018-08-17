@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Configuration;
 
 using Jobs.RemoteControl.Settings;
@@ -13,9 +12,12 @@ using NuClear.Settings;
 using NuClear.Settings.API;
 using NuClear.Storage.API.ConnectionStrings;
 using NuClear.Telemetry.Logstash;
-using NuClear.ValidationRules.Storage.Identitites.Connections;
+using NuClear.ValidationRules.Storage.Connections;
 
 using Quartz.Impl;
+
+using ValidationRules.Hosting.Common.Settings;
+using ValidationRules.Hosting.Common.Settings.Connections;
 
 namespace NuClear.ValidationRules.Replication.Host.Settings
 {
@@ -26,46 +28,21 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
 
         public ReplicationServiceSettings()
         {
-            var connectionStringSettings = new ConnectionStringSettingsAspect(
-                new Dictionary<IConnectionStringIdentity, string>
-                {
-                    {
-                        ErmConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Erm"].ConnectionString
-                    },
-                    {
-                        AmsConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Ams"].ConnectionString
-                    },
-                    {
-                        FactsConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Facts"].ConnectionString
-                    },
-                    {
-                        AggregatesConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Aggregates"].ConnectionString
-                    },
-                    {
-                        MessagesConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Messages"].ConnectionString
-                    },
-                    {
-                        ServiceBusConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["ServiceBus"].ConnectionString
-                    },
-                    {
-                        InfrastructureConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Infrastructure"].ConnectionString
-                    },
-                    {
-                        LoggingConnectionStringIdentity.Instance,
-                        ConfigurationManager.ConnectionStrings["Logging"].ConnectionString
-                    }
-                });
+            var connectionStrings = ConnectionStrings.For(ErmConnectionStringIdentity.Instance,
+                                                          AmsConnectionStringIdentity.Instance,
+                                                          RulesetConnectionStringIdentity.Instance,
+                                                          FactsConnectionStringIdentity.Instance,
+                                                          AggregatesConnectionStringIdentity.Instance,
+                                                          MessagesConnectionStringIdentity.Instance,
+                                                          ServiceBusConnectionStringIdentity.Instance,
+                                                          InfrastructureConnectionStringIdentity.Instance,
+                                                          LoggingConnectionStringIdentity.Instance);
+            var connectionStringSettings = new ConnectionStringSettingsAspect(connectionStrings);
 
             var quartzProperties = (NameValueCollection)ConfigurationManager.GetSection(StdSchedulerFactory.ConfigurationSectionName);
 
             Aspects.Use(connectionStringSettings)
+                   .Use<BusinessModelSettingsAspect>()
                    .Use<ServiceBusMessageLockRenewalSettings>()
                    .Use<EnvironmentSettingsAspect>()
                    .Use(new QuartzSettingsAspect(connectionStringSettings.GetConnectionString(InfrastructureConnectionStringIdentity.Instance)))
@@ -76,14 +53,8 @@ namespace NuClear.ValidationRules.Replication.Host.Settings
                    .Use(new TaskServiceRemoteControlSettings(quartzProperties));
         }
 
-        public int ReplicationBatchSize
-        {
-            get { return _replicationBatchSize.Value; }
-        }
+        public int ReplicationBatchSize => _replicationBatchSize.Value;
 
-        public int SqlCommandTimeout
-        {
-            get { return _sqlCommandTimeout.Value; }
-        }
+        public int SqlCommandTimeout => _sqlCommandTimeout.Value;
     }
 }

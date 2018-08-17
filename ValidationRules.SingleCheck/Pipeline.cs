@@ -9,6 +9,7 @@ using LinqToDB.Data;
 using NuClear.Replication.Core.DataObjects;
 using NuClear.Storage.API.Readings;
 using NuClear.Telemetry.Probing;
+using NuClear.ValidationRules.SingleCheck.DataLoaders;
 using NuClear.ValidationRules.SingleCheck.Store;
 using NuClear.ValidationRules.Storage;
 using NuClear.ValidationRules.Storage.Model.Erm;
@@ -63,9 +64,15 @@ namespace NuClear.ValidationRules.SingleCheck
                     optimization.PrepareToUse(predicates.Distinct());
                 }
 
+                ErmDataLoader.ResolvedOrderSummary orderSummary;
                 using (Probe.Create("Erm -> Erm slice"))
                 {
-                    ReadErmSlice(orderId, wrap(erm.CreateStore()));
+                    ReadErmSlice(orderId, wrap(erm.CreateStore()), out orderSummary);
+                }
+
+                using (Probe.Create("Rulesets -> Facts"))
+                {
+                    ReadRulesetsSlice(orderSummary, wrap(store.CreateStore()));
                 }
 
                 using (Probe.Create("Erm slice -> Facts"))
@@ -94,12 +101,21 @@ namespace NuClear.ValidationRules.SingleCheck
             }
         }
 
-        private static void ReadErmSlice(long orderId, IStore store)
+        private static void ReadErmSlice(long orderId, IStore store, out ErmDataLoader.ResolvedOrderSummary orderSummary)
         {
             using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             using (var connection = new DataConnection("Erm").AddMappingSchema(Schema.Erm))
             {
-                ErmDataLoader.Load(orderId, connection, store);
+                ErmDataLoader.Load(orderId, connection, store, out orderSummary);
+            }
+        }
+
+        private static void ReadRulesetsSlice(ErmDataLoader.ResolvedOrderSummary orderSummary, IStore store)
+        {
+            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
+            using (var connection = new DataConnection("Facts").AddMappingSchema(Schema.Facts))
+            {
+                RulesetsDataLoader.Load(orderSummary, connection, store);
             }
         }
 

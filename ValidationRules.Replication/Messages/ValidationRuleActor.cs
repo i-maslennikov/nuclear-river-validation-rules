@@ -297,12 +297,10 @@ namespace NuClear.ValidationRules.Replication.Messages
 
                     new AdvertisementCountPerCategoryShouldBeLimited(_query),
                     new AdvertisementCountPerThemeShouldBeLimited(_query),
-                    new AssociatedPositionsGroupCount(_query),
                     new FirmAssociatedPositionMustHavePrincipal(_query),
                     new FirmAssociatedPositionMustHavePrincipalWithDifferentBindingObject(_query),
                     new FirmPositionMustNotHaveDeniedPositions(_query),
                     new FirmAssociatedPositionMustHavePrincipalWithMatchedBindingObject(_query),
-                    new MinimalAdvertisementRestrictionShouldBeSpecified(_query),
                     new AdvertisementAmountShouldMeetMaximumRestrictions(_query),
                     new AdvertisementAmountShouldMeetMinimumRestrictions(_query),
                     new AdvertisementAmountShouldMeetMinimumRestrictionsMass(_query),

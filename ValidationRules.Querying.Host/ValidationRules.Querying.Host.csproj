@@ -169,6 +169,7 @@
     <Compile Include="Composition\Composers\PartnerAdvertisementMustNotCauseProblemsToTheAdvertiserMessageComposer.cs" />
     <Compile Include="Composition\Composers\PoiAmountForEntranceShouldMeetMaximumRestrictionsComposer.cs" />
     <Compile Include="Composition\IMessageSeverityProvider.cs" />
+    <Compile Include="DataAccess\AliasForAmsFactsFlow.cs" />
     <Compile Include="QueryingServiceSettings.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMaximumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\AmsMessagesShouldBeNewMessageComposer.cs" />
@@ -222,7 +223,6 @@
     <Compile Include="Composition\Composers\AccountShouldExistMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementCountPerCategoryShouldBeLimitedMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementCountPerThemeShouldBeLimitedMessageComposer.cs" />
-    <Compile Include="Composition\Composers\AssociatedPositionsGroupCountMessageComposer.cs" />
     <Compile Include="Composition\Composers\AssociatedPositionWithoutPrincipalMessageComposer.cs" />
     <Compile Include="Composition\Composers\BargainScanShouldPresentMessageComposer.cs" />
     <Compile Include="Composition\Composers\BillsShouldBeCreatedMessageComposer.cs" />
@@ -244,7 +244,6 @@
     <Compile Include="Composition\Composers\LinkedFirmShouldBeValidMessageComposer.cs" />
     <Compile Include="Composition\Composers\LinkedObjectsMissedInPrincipalsMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetRestrictionsMassMessageComposer.cs" />
-    <Compile Include="Composition\Composers\MinimalAdvertisementRestrictionShouldBeSpecifiedMessageComposer.cs" />
     <Compile Include="Composition\Composers\AdvertisementAmountShouldMeetMinimumRestrictionsMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderBeginDistrubutionShouldBeFirstDayOfMonthMessageComposer.cs" />
     <Compile Include="Composition\Composers\OrderEndDistrubutionShouldBeLastSecondOfMonthMessageComposer.cs" />
