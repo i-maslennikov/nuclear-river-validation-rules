@@ -107,18 +107,21 @@ function Get-RulesetsFactsTopicsMetadata($Context){
 				}
 			}
 			return @{
-				'RulesetsFactsTopic' = 'vr_test_rulesets'
+				'RulesetsFactsTopic' = 'casino_staging_flowRulesets_compacted'
 			}
 		 }
 		'Business' {
-			return @{ 'RulesetsFactsTopic' = "rulesets_business$($Context['Index'])" }
+			if ($Context['Index'] -eq '1'){
+				return @{'RulesetsFactsTopic' = 'erm_business01_flowRulesets'}
+			}
+			return @{ 'RulesetsFactsTopic' = 'casino_staging_flowRulesets_compacted' }
 		}
 		'Edu' {
-			return @{ 'RulesetsFactsTopic' = "rulesets_edu$($Context['Index'])" }
+			return @{ 'RulesetsFactsTopic' = 'casino_staging_flowRulesets_compacted' }
 		}
 		 'Production' {
 			 return @{
-				 'RulesetsFactsTopic' = 'rulesets_prod'
+				 'RulesetsFactsTopic' = 'casino_staging_flowRulesets_compacted'
 			 }
 		}
 		default {
