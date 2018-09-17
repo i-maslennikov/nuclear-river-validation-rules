@@ -138,9 +138,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             public IQueryable<Order.OrderPricePosition> GetSource()
                 =>
                     from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from pricePosition in _query.For<Facts::PricePosition>().Where(x => x.Id == orderPosition.PricePositionId)
-                   select new Order.OrderPricePosition
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    join pricePosition in _query.For<Facts::PricePosition>() on orderPosition.PricePositionId equals pricePosition.Id
+                    select new Order.OrderPricePosition
                        {
                            OrderId = orderPosition.OrderId,
                            OrderPositionId = orderPosition.Id,
@@ -177,10 +177,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             {
                 var result =
                     from order in _query.For<Facts::Order>()
-                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodeAdvertisementInCategory).Where(x => x.Id == opa.PositionId) // join для того, чтобы отбросить неподходящие продажи
-                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    join opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.CategoryId.HasValue) on orderPosition.Id equals opa.OrderPositionId
+                    join position in _query.For<Facts::Position>().Where(x => x.CategoryCode == Facts::Position.CategoryCodeAdvertisementInCategory) on opa.PositionId equals position.Id // join для того, чтобы отбросить неподходящие продажи
+                    join project in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals project.OrganizationUnitId
                     select new Order.OrderCategoryPosition
                     {
                         OrderId = order.Id,
@@ -218,9 +218,9 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             {
                 var result =
                     from order in _query.For<Facts::Order>()
-                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.ThemeId.HasValue).Where(x => x.OrderPositionId == orderPosition.Id)
-                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    join opa in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.ThemeId.HasValue) on orderPosition.Id equals opa.OrderPositionId
+                    join project in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals project.OrganizationUnitId
                     select new Order.OrderThemePosition
                     {
                             OrderId = order.Id,
@@ -258,10 +258,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Order.AmountControlledPosition> GetSource()
                 =>  from order in _query.For<Facts::Order>() // Чтобы сократить число позиций
-                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from adv in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.IsControlledByAmount).Where(x => x.Id == adv.PositionId)
-                    from project in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    join adv in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals adv.OrderPositionId
+                    join position in _query.For<Facts::Position>().Where(x => !x.IsDeleted && x.IsControlledByAmount) on adv.PositionId equals position.Id
+                    join project in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals project.OrganizationUnitId
                     select new Order.AmountControlledPosition
                     {
                         OrderId = orderPosition.OrderId,
@@ -294,10 +294,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
 
             public IQueryable<Order.EntranceControlledPosition> GetSource()
                 => (from order in _query.For<Facts::Order>()
-                    from orderPosition in _query.For<Facts::OrderPosition>().Where(x => x.OrderId == order.Id)
-                    from adv in _query.For<Facts::OrderPositionAdvertisement>().Where(x => x.OrderPositionId == orderPosition.Id)
-                    from position in _query.For<Facts::Position>().Where(x => Facts.Position.CategoryCodesPoiAddressCheck.Contains(x.CategoryCode)).Where(x => x.Id == adv.PositionId)
-                    from address in _query.For<Facts::FirmAddress>().Where(x => x.EntranceCode != null).Where(x => x.Id == adv.FirmAddressId)
+                    join orderPosition in _query.For<Facts::OrderPosition>() on order.Id equals orderPosition.OrderId
+                    join adv in _query.For<Facts::OrderPositionAdvertisement>() on orderPosition.Id equals adv.OrderPositionId
+                    join position in _query.For<Facts::Position>().Where(x => Facts.Position.CategoryCodesPoiAddressCheck.Contains(x.CategoryCode)) on adv.PositionId equals position.Id
+                    join address in _query.For<Facts::FirmAddress>().Where(x => x.EntranceCode != null) on adv.FirmAddressId equals address.Id
                     select new Order.EntranceControlledPosition
                     {
                         OrderId = orderPosition.OrderId,
@@ -333,7 +333,7 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
             {
                 var result =
                     from order in _query.For<Facts::Order>()
-                    from destProject in _query.For<Facts::Project>().Where(x => x.OrganizationUnitId == order.DestOrganizationUnitId)
+                    join destProject in _query.For<Facts::Project>() on order.DestOrganizationUnitId equals destProject.OrganizationUnitId
                     let price = _query.For<Facts::Price>()
                                 .Where(x => x.ProjectId == destProject.Id)
                                 .Where(x => x.BeginDate <= order.BeginDistribution)
