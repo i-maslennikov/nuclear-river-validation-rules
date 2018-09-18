@@ -59,8 +59,9 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
         public sealed class AmountControlledPosition
         {
             public long OrderId { get; set; }
-            public long ProjectId { get; set; }
+            public long OrderPositionId { get; set; }
             public long CategoryCode { get; set; }
+            public long ProjectId { get; set; }
         }
 
         public sealed class ActualPrice

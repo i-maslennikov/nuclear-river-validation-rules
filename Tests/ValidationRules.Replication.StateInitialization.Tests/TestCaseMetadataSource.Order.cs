@@ -49,7 +49,7 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Facts::Project { Id = 123 })
                 .Aggregate(
                     new Aggregates::Order { Id = 1 },
-                    new Aggregates::Order.AmountControlledPosition { OrderId = 1, CategoryCode = 10, ProjectId = 123 },
+                    new Aggregates::Order.AmountControlledPosition { OrderId = 1, OrderPositionId = 1, CategoryCode = 10, ProjectId = 123 },
                     new Aggregates::Order.OrderPricePosition { OrderId = 1, OrderPositionId = 1, PositionId = 1, PriceId = 1, IsActive = true });
     }
 }
