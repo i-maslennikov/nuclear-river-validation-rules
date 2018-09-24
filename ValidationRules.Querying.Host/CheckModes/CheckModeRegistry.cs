@@ -138,11 +138,9 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
 
-                    // TODO: согласовать ошибку при всех типах проверок.
-                    // сейчас повторяется логика erm, но мне она кажется странной, ошибка должна быть на всех уровнях - нельзя пропускать лишний заказ в ядро.
-                    // например, аналогичная проверка на количество тематик в выпуске - выдает всегда ошибку.
                     Rule(MessageTypeCode.AdvertisementCountPerCategoryShouldBeLimited,
                          single: RuleSeverityLevel.Warning,
+                         singleForApprove: RuleSeverityLevel.Error,
                          manualReport: RuleSeverityLevel.Error,
                          prerelease: RuleSeverityLevel.Error,
                          release: RuleSeverityLevel.Error),
