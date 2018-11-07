@@ -328,13 +328,13 @@
     <value>Reklamní materiál {0} byl schválen s poznámkami</value>
   </data>
   <data name="FirmAddressMustNotHaveMultipleCallToAction" xml:space="preserve">
-    <value>Firmě „{1}“ umístěné na adrese „{0}“ bylo prodáno více než jedno akční tlačítko v záhlaví kartičky, za období: {2}</value>
+    <value>На адрес {0} фирмы {1} продано более одной кнопки в заголовок карточки в периоды: {2}</value>
   </data>
   <data name="FirmAddressShouldNotHaveMultiplePartnerAdvertisement" xml:space="preserve">
-    <value>Firmě „{1}“ umístěné na adrese „{0}“ byla prodána více než jedna pozice „Reklama v profilech partnerů“ za období: {2}</value>
+    <value>На адрес {0} фирмы {1} продано более одной позиции 'Реклама в профилях партнёров' в периоды: {2}</value>
   </data>
   <data name="PartnerAdvertisementShouldNotBeSoldToAdvertiser" xml:space="preserve">
-    <value>Adresa {0} patří firmě-zadavateli reklamy {1} s objednávkou {2}</value>
+    <value>Адрес {0} принадлежит фирме-рекламодателю {1} с заказом {2}</value>
   </data>
   <data name="AmsMessagesShouldBeNew" xml:space="preserve">
     <value>Data ze systému AMS jsou zastaralá, výsledky kontrol nejsou věrohodné</value>
