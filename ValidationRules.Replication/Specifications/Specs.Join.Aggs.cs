@@ -52,6 +52,7 @@ namespace NuClear.ValidationRules.Replication.Specifications
                             requirements
                                 .Where(requirement => requirement.OrderPositionId == associated.OrderPositionId && requirement.ItemPositionId == associated.ItemPositionId)
                                 .SelectMany(requirement => principals
+                                                .Where(principal => requirement.Begin <= principal.Begin && principal.Begin < requirement.End)
                                                 .Where(principal => principal.Begin == associated.Begin && principal.FirmId == associated.FirmId)
                                                 .Where(principal => principal.ItemPositionId == requirement.DeniedPositionId && principal.FirmId == requirement.FirmId)
                                                 .Where(principal => Scope.CanSee(associated.Scope, principal.Scope))

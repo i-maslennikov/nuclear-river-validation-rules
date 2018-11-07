@@ -237,7 +237,10 @@ namespace NuClear.ValidationRules.Replication.PriceRules.Aggregates
                             ItemPositionId = item.ItemPositionId,
 
                             DeniedPositionId = rule.DeniedNomenclatureId,
-                            BindingType = rule.BindingObjectStrategy
+                            BindingType = rule.BindingObjectStrategy,
+
+                            Begin = ruleset.BeginDate,
+                            End = ruleset.EndDate
                         };
 
                 return evaluatedRestrictions.Distinct();

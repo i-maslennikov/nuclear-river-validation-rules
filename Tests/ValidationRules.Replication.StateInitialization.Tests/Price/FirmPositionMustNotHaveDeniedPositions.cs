@@ -20,14 +20,17 @@ namespace NuClear.ValidationRules.Replication.StateInitialization.Tests
                     new Aggregates::Firm { Id = 1 },
                     new Aggregates::Firm.FirmPosition { FirmId = 1, OrderPositionId = 1, Begin = MonthStart(1), End = MonthStart(2), PackagePositionId = 2, ItemPositionId = 2 },
 
-                    new Aggregates::Firm.FirmDeniedPosition { FirmId = 1, OrderPositionId = 1, PackagePositionId = 2, ItemPositionId = 2, BindingType = 2, DeniedPositionId = 2 },
+                    new Aggregates::Firm.FirmDeniedPosition { FirmId = 1, OrderPositionId = 1, PackagePositionId = 2, ItemPositionId = 2, BindingType = 2, DeniedPositionId = 2, Begin = MonthStart(1), End = MonthStart(2)},
 
                     // Две разных позиции должны приводить к сообщению
                     new Aggregates::Firm { Id = 3 },
                     new Aggregates::Firm.FirmPosition { FirmId = 3, OrderPositionId = 4, Begin = MonthStart(1), End = MonthStart(2), PackagePositionId = 2, ItemPositionId = 2 },
                     new Aggregates::Firm.FirmPosition { FirmId = 3, OrderPositionId = 5, Begin = MonthStart(1), End = MonthStart(2), PackagePositionId = 2, ItemPositionId = 3 },
 
-                    new Aggregates::Firm.FirmDeniedPosition { FirmId = 3, OrderPositionId = 4, PackagePositionId = 2, ItemPositionId = 2, BindingType = 2, DeniedPositionId = 3 })
+                    // Если периоды не пересекаются, сообщения быть не должно
+                    new Aggregates::Firm.FirmPosition { FirmId = 3, OrderPositionId = 5, Begin = MonthStart(2), End = MonthStart(3), PackagePositionId = 2, ItemPositionId = 3 },
+
+                    new Aggregates::Firm.FirmDeniedPosition { FirmId = 3, OrderPositionId = 4, PackagePositionId = 2, ItemPositionId = 2, BindingType = 2, DeniedPositionId = 3, Begin = MonthStart(1), End = MonthStart(2) })
                 .Message(
                     new Messages::Version.ValidationResult
                     {

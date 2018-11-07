@@ -117,7 +117,7 @@ namespace NuClear.ValidationRules.Storage
 
             builder.Entity<PriceAggregates::Firm.FirmDeniedPosition>()
                    .HasSchemaName(PriceAggregatesSchema)
-                   .HasIndex(x => new { x.FirmId, x.OrderPositionId, x.ItemPositionId }, x => new { x.DeniedPositionId, x.BindingType });
+                   .HasIndex(x => new { x.FirmId, x.OrderPositionId, x.ItemPositionId }, x => new { x.DeniedPositionId, x.BindingType, x.Begin, x.End });
 
             builder.Entity<PriceAggregates::Order>()
                   .HasSchemaName(PriceAggregatesSchema)

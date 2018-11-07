@@ -42,6 +42,9 @@ namespace NuClear.ValidationRules.Storage.Model.PriceRules.Aggregates
             public long ItemPositionId { get; set; }
             public long DeniedPositionId { get; set; }
             public int BindingType { get; set; }
+
+            public DateTime Begin { get; set; }
+            public DateTime End { get; set; }
         }
 
         public interface IBindingObject
