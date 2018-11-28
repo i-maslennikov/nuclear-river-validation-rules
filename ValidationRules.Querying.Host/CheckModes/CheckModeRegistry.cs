@@ -319,10 +319,10 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
 
                     Rule(MessageTypeCode.PoiAmountForEntranceShouldMeetMaximumRestrictions,
                          single: RuleSeverityLevel.Warning,
-                         singleForApprove: RuleSeverityLevel.Warning,
-                         manualReport: RuleSeverityLevel.Warning,
-                         prerelease: RuleSeverityLevel.Warning,
-                         release: RuleSeverityLevel.Warning),
+                         singleForApprove: RuleSeverityLevel.Error,
+                         manualReport: RuleSeverityLevel.Error,
+                         prerelease: RuleSeverityLevel.Error,
+                         release: RuleSeverityLevel.Error),
 
                     Rule(MessageTypeCode.AtLeastOneLinkedPartnerFirmAddressShouldBeValid,
                          single: RuleSeverityLevel.Error,
