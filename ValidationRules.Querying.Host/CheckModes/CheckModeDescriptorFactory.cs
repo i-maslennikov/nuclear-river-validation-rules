@@ -26,20 +26,20 @@ namespace NuClear.ValidationRules.Querying.Host.CheckModes
 
         private sealed class CheckModeDescriptor : ICheckModeDescriptor
         {
-            private readonly CheckMode _checkMode;
-
             public CheckModeDescriptor(CheckMode checkMode, IReadOnlyDictionary<MessageTypeCode, RuleSeverityLevel> checkModeRules)
             {
-                _checkMode = checkMode;
+                CheckMode = checkMode;
                 Rules = checkModeRules;
             }
 
             public IReadOnlyDictionary<MessageTypeCode, RuleSeverityLevel> Rules { get; }
 
+            public CheckMode CheckMode { get; }
+
             public DateTime GetValidationPeriodStart(Order order)
             {
                 const int OrderStateOnTermination = 4;
-                if (_checkMode == CheckMode.SingleForApprove && order.WorkflowStepId == OrderStateOnTermination)
+                if (CheckMode == CheckMode.SingleForApprove && order.WorkflowStepId == OrderStateOnTermination)
                 {
                     return order.EndDistributionDateFact.AddSeconds(1);
                 }
