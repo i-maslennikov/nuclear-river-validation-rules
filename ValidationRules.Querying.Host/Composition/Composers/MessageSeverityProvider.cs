@@ -11,26 +11,30 @@ namespace NuClear.ValidationRules.Querying.Host.Composition.Composers
             switch (message.MessageType)
             {
                 case MessageTypeCode.OrderRequiredFieldsShouldBeSpecified:
-                    //Понижаем уровень ошибки LegalPersonProfile до Warning для не Single проверок
+                    // Понижаем уровень ошибки LegalPersonProfile до Warning для не Single проверок
+                    // т.к. обычный заказ не может быть утвержден без выполнения этой проверки (error в Single проверке),
+                    // а для самопродажных заказов она не имеет смысла (поэтому warning в массовых проверках)
                     var isLegalPersonProfile = bool.Parse(message.Extra["legalPersonProfile"]);
                     var isCurrency = bool.Parse(message.Extra["currency"]);
                     var isBranchOfficeOrganizationUnit = bool.Parse(message.Extra["branchOfficeOrganizationUnit"]);
                     var isLegalPerson = bool.Parse(message.Extra["legalPerson"]);
 
-                    return checkModeDescriptor.CheckMode != CheckMode.Single
-                           && !isCurrency && !isBranchOfficeOrganizationUnit && !isLegalPerson && isLegalPersonProfile
-                               ? RuleSeverityLevel.Warning
-                               : GetConfiguredLevel(message, checkModeDescriptor);
-
+                    if (checkModeDescriptor.CheckMode != CheckMode.Single && !isCurrency
+                        && !isBranchOfficeOrganizationUnit && !isLegalPerson && isLegalPersonProfile)
+                    {
+                        return RuleSeverityLevel.Warning;
+                    }
+                    break;
                 case MessageTypeCode.LinkedFirmAddressShouldBeValid:
                     var isPartnerAddress = bool.Parse(message.Extra["isPartnerAddress"]);
-                    return isPartnerAddress
-                               ? RuleSeverityLevel.Warning
-                               : GetConfiguredLevel(message, checkModeDescriptor);
-
-                default:
-                    return GetConfiguredLevel(message, checkModeDescriptor);
+                    if (isPartnerAddress)
+                    {
+                        return RuleSeverityLevel.Warning;
+                    }
+                    break;
             }
+
+            return GetConfiguredLevel(message, checkModeDescriptor);
         }
 
         private RuleSeverityLevel GetConfiguredLevel(Message message, ICheckModeDescriptor checkModeDescriptor)
