@@ -7,6 +7,8 @@ namespace NuClear.ValidationRules.Storage.Model.Messages
 {
     public interface ICheckModeDescriptor
     {
+        CheckMode CheckMode { get; }
+
         IReadOnlyDictionary<MessageTypeCode, RuleSeverityLevel> Rules { get; }
 
         // Костыль для проверки заказа "на расторжении" только в той его части, которая ещё не размещалась
